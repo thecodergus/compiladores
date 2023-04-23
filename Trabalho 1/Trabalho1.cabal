@@ -18,8 +18,9 @@ extra-source-files:  CHANGELOG.md
 
 executable Trabalho1
   main-is:             Main.hs
-  -- other-modules:
+  other-modules:  Types, Lexer, Expressions, Statements, Functions, Program
   -- other-extensions:
-  build-depends:       base >=4.13 && <4.14
+  build-depends:        base >=4.14.3.0, parsec >=3.1.14.0, mtl >= 2.3.1 
   hs-source-dirs:      app, app/Modules
   default-language:    Haskell2010
+  ghc-options: -Wno-tabs
