@@ -6,11 +6,7 @@ import Types (Type (..), Var (..))
 
 -- Função principal para analisar declarações de variáveis
 variableDeclarations :: Parsec String () [Var]
-variableDeclarations = variableDeclaration
-
--- Função auxiliar para analisar uma única declaração de variável
-variableDeclaration :: Parsec String () [Var]
-variableDeclaration = do
+variableDeclarations = do
   t <- varType
   whiteSpace'
   varList <- commaSep' identifier'
