@@ -1,7 +1,7 @@
 -- Módulo Lexer.hs: Implementa os parsers para tokens básicos e palavras reservadas.
 module Lexer where
 
-import Text.Parsec (alphaNum, char, letter, oneOf, (<|>))
+import Text.Parsec (alphaNum, char, choice, letter, oneOf, (<|>))
 import Text.Parsec.Language (LanguageDef, emptyDef)
 import Text.Parsec.String (Parser)
 import Text.Parsec.Token
@@ -24,6 +24,7 @@ import Text.Parsec.Token
     TokenParser,
     makeTokenParser,
   )
+import Text.ParserCombinators.Parsec ((<?>))
 import Types (Type (..))
 
 -- Define a linguagem de programação específica.
@@ -54,3 +55,13 @@ typeParser =
     <|> fmap (const TDouble) (reserved lexer "double")
     <|> fmap (const TString) (reserved lexer "string")
     <|> fmap (const TVoid) (reserved lexer "void")
+
+tType :: Parser Type
+tType =
+  choice
+    [ reserved lexer "double" >> return TDouble,
+      reserved lexer "int" >> return TInt,
+      reserved lexer "string" >> return TString,
+      reserved lexer "void" >> return TVoid
+    ]
+    <?> "type"
