@@ -14,7 +14,7 @@ data Type
 -- Representação de constantes na linguagem: Double, Int e String.
 data TCons
   = CDouble Double
-  | CInt Int
+  | CInt Integer
   | CString String
   deriving (Show)
 
