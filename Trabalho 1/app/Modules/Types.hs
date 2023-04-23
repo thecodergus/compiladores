@@ -1,4 +1,3 @@
--- Módulo Types.hs: Contém todos os tipos algébricos de dados usados no projeto.
 module Types where
 
 -- Tipo para representar identificadores.
