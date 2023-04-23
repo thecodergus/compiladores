@@ -55,13 +55,3 @@ typeParser =
     <|> fmap (const TDouble) (reserved lexer "double")
     <|> fmap (const TString) (reserved lexer "string")
     <|> fmap (const TVoid) (reserved lexer "void")
-
-tType :: Parser Type
-tType =
-  choice
-    [ reserved lexer "double" >> return TDouble,
-      reserved lexer "int" >> return TInt,
-      reserved lexer "string" >> return TString,
-      reserved lexer "void" >> return TVoid
-    ]
-    <?> "type"

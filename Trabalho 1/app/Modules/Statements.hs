@@ -1,6 +1,6 @@
 module Statements where
 
-import Lexer (lexer, tType)
+import Lexer (lexer, typeParser)
 import Text.Parsec.String (Parser)
 import Text.ParserCombinators.Parsec (Parser, (<?>))
 import Text.ParserCombinators.Parsec.Token
@@ -21,6 +21,6 @@ var =
   do
     vName <- identifier'
     reservedOp' ":"
-    vType <- tType
+    vType <- typeParser
     return (vName :#: vType)
     <?> "var"

@@ -73,6 +73,7 @@ exprR =
     <|> liftM2 (:>=:) expr (reservedOp' ">=" >> expr)
     <?> "exprR"
 
+-- Parser para expressões logicas
 exprL :: Parser ExprL
 exprL = buildExpressionParser table term <?> "exprL"
   where
