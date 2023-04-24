@@ -8,8 +8,8 @@ import Types (Type (..), Var (..))
 variableDeclarations :: Parsec String () [Var]
 variableDeclarations = do
   t <- varType
-  whiteSpace'
   semi'
+  whiteSpace'
   varList <- commaSep' identifier'
   return (createVariables t varList)
 
