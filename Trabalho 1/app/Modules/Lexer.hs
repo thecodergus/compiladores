@@ -2,7 +2,7 @@ module Lexer where
 
 import Text.Parsec (Parsec, alphaNum, char, letter, (<|>))
 import Text.Parsec.Language (emptyDef)
-import Text.Parsec.Token (LanguageDef (..), TokenParser, braces, commaSep, float, identifier, integer, makeTokenParser, parens, reserved, reservedOp, semi, stringLiteral, whiteSpace)
+import Text.Parsec.Token (LanguageDef (..), TokenParser, braces, commaSep, float, identifier, integer, makeTokenParser, parens, reserved, reservedOp, semi, stringLiteral, whiteSpace, symbol)
 import Text.ParserCombinators.Parsec.Language (GenLanguageDef (..))
 import Types (Id)
 
