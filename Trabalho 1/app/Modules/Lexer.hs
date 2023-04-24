@@ -54,3 +54,6 @@ stringLiteral' = stringLiteral lexer'
 
 whiteSpace' :: Parsec String () ()
 whiteSpace' = whiteSpace lexer'
+
+symbol' :: String -> Parsec String ()
+symbol' = symbol lexer'
