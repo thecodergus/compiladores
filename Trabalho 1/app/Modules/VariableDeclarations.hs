@@ -8,9 +8,8 @@ import Types (Type (..), Var (..))
 variableDeclarations :: Parsec String () [Var]
 variableDeclarations = do
   t <- varType
-  semi'
   whiteSpace'
-  varList <- commaSep' identifier'
+  varList <- semi' commaSep' identifier'
   return (createVariables t varList)
 
 -- Função auxiliar para criar uma lista de variáveis a partir de um tipo e uma lista de identificadores
