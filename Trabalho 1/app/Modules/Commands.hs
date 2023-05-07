@@ -2,6 +2,7 @@ module Commands where
 
 import ArithmeticExpressions (arithmeticExpression)
 import Lexer (braces', commaSep', identifier', parens', reserved', reservedOp', semi', stringLiteral', whiteSpace')
+import LogicalExpressions (logicalExpression)
 import RelationalExpressions (relationalExpression)
 import Text.Parsec (Parsec, choice, many, many1, optionMaybe, optional, try, (<|>))
 import Types (Bloco, Comando (..), Expr, ExprL (..), ExprR)
@@ -69,23 +70,6 @@ returnCommand = do
   mExpr <- optionMaybe (try arithmeticExpression)
   semi'
   return (Ret mExpr)
-
--- Função para analisar expressões lógicas
-logicalExpression :: Parsec String () ExprL
-logicalExpression = do
-  whiteSpace'
-  e1 <- try (Rel <$> relationalExpression) <|> parens' logicalExpression
-  op <- logicalOperator
-  e2 <- try (Rel <$> relationalExpression) <|> parens' logicalExpression
-  whiteSpace'
-  return (op e1 e2)
-
--- Função auxiliar para analisar operadores lógicos
-logicalOperator :: Parsec String () (ExprL -> ExprL -> ExprL)
-logicalOperator =
-  try (reservedOp' "&&" >> return (:&:))
-    <|> try (reservedOp' "||" >> return (:|:))
-    <|> (reservedOp' "!" >> return (\e1 e2 -> Not (e1 :&: e2)))
 
 -- Função para analisar um bloco de comandos
 block :: Parsec String () Bloco
