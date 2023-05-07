@@ -3,7 +3,7 @@ module Commands where
 import ArithmeticExpressions (arithmeticExpression)
 import Lexer (braces', commaSep', identifier', parens', reserved', reservedOp', semi', stringLiteral', whiteSpace')
 import RelationalExpressions (relationalExpression)
-import Text.Parsec (Parsec, choice, many, many1, optional, try, (<|>))
+import Text.Parsec (Parsec, choice, many, many1, optionMaybe, optional, try, (<|>))
 import Types (Bloco, Comando (..), Expr, ExprL (..), ExprR)
 
 -- Função principal para analisar comandos
@@ -15,7 +15,8 @@ command =
       atribCommand,
       readCommand,
       printCommand,
-      returnCommand
+      returnCommand,
+      procCommand
     ]
 
 -- Função auxiliar para analisar comandos If
@@ -65,9 +66,9 @@ printCommand = do
 returnCommand :: Parsec String () Comando
 returnCommand = do
   reserved' "return"
-  expr <- arithmeticExpression
+  mExpr <- optionMaybe (try arithmeticExpression)
   semi'
-  return (Ret expr)
+  return (Ret mExpr)
 
 -- Função para analisar expressões lógicas
 logicalExpression :: Parsec String () ExprL
@@ -89,3 +90,11 @@ logicalOperator =
 -- Função para analisar um bloco de comandos
 block :: Parsec String () Bloco
 block = many1 command
+
+-- Função auxiliar para analisar comandos de chamada de procedimento (Proc)
+procCommand :: Parsec String () Comando
+procCommand = do
+  procName <- identifier'
+  args <- parens' (commaSep' arithmeticExpression)
+  semi'
+  return (Proc procName args)
