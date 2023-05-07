@@ -1,7 +1,7 @@
 module LexerSpec where
 
-import Lexer (braces', identifier', reserved', reservedOp', semi', whiteSpace')
-import Test.Hspec
+import Lexer (braces', identifier', reserved', reservedOp', semi', whiteSpace', parens')
+import Test.Hspec ( Spec, describe, it, shouldBe )
 import Text.Parsec (ParseError, Parsec, parse, string)
 
 parseTest :: Parsec String () a -> String -> Either ParseError a
@@ -39,4 +39,7 @@ spec = do
 
     it "parses braces with nested braces" $
       parseTest (braces' $ string "outer" *> braces' (string "inner")) "{outer{inner}}" `shouldBe` Right "inner"
+
+    it "parses parentheses" $
+      parseTest (parens' $ string "inside") "(inside)" `shouldBe` Right "inside"
 
