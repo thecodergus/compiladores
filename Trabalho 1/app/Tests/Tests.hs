@@ -3,13 +3,13 @@ module Tests where
 import Test.Hspec
 import VariableDeclarations ()
 
-import qualified ArithmeticExpressionsSpec as ArithmeticExpressionsSpec
-import qualified LexerSpec as LexerSpec
-import qualified RelationalExpressionsSpec as RelationalExpressionsSpec
-import qualified LogicalExpressionsSpec as LogicalExpressionsSpec
-import qualified CommandsSpec as CommandsSpec
-import qualified VariableDeclarationsSpec as VariableDeclarationsSpec
-import qualified FunctionsAndParametersSpec as FunctionsAndParametersSpec
+import qualified ArithmeticExpressionsSpec
+import qualified LexerSpec
+import qualified RelationalExpressionsSpec
+import qualified LogicalExpressionsSpec
+import qualified CommandsSpec
+import qualified VariableDeclarationsSpec
+import qualified FunctionsAndParametersSpec
 
 tests :: IO ()
 tests = do
@@ -19,5 +19,4 @@ tests = do
       hspec LogicalExpressionsSpec.spec
       hspec VariableDeclarationsSpec.spec
       hspec FunctionsAndParametersSpec.spec
-
-      -- hspec CommandsSpec.spec
+      hspec CommandsSpec.spec
