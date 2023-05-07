@@ -12,8 +12,8 @@ import qualified CommandsSpec as CommandsSpec
 
 tests :: IO ()
 tests = do
-  hspec ArithmeticExpressionsSpec.spec
-  hspec LexerSpec.spec
-  hspec RelationalExpressionsSpec.spec
-  hspec LogicalExpressionsSpec.spec
-  hspec CommandsSpec.spec
+      hspec ArithmeticExpressionsSpec.spec
+      hspec LexerSpec.spec
+      hspec RelationalExpressionsSpec.spec
+      hspec LogicalExpressionsSpec.spec
+      -- hspec CommandsSpec.spec

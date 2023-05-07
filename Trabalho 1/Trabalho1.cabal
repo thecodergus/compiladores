@@ -28,19 +28,23 @@ executable Trabalho1
     ArithmeticExpressions
     ArithmeticExpressionsSpec
     BlocksAndCommandLists
+    BlocksAndCommandListsSpec
     Commands
     CommandsSpec
     FunctionsAndParameters
+    FunctionsAndParametersSpec
     Lexer
     LexerSpec
     LogicalExpressions
     LogicalExpressionsSpec
     ProgramParser
+    ProgramParserSpec
     RelationalExpressions
     RelationalExpressionsSpec
     Tests
     Types
     VariableDeclarations
+    VariableDeclarationsSpec
 
   -- other-extensions:
   build-depends:

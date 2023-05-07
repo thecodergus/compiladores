@@ -4,7 +4,7 @@ import Text.Parsec (Parsec, alphaNum, char, letter, (<|>))
 import Text.Parsec.Language (emptyDef)
 import Text.Parsec.Token (LanguageDef (..), TokenParser, braces, commaSep, float, identifier, integer, makeTokenParser, parens, reserved, reservedOp, semi, stringLiteral, symbol, whiteSpace)
 import Text.ParserCombinators.Parsec.Language (GenLanguageDef (..))
-import Types (Id)
+import Types (Expr(IdVar), Id)
 
 lexer' :: TokenParser ()
 lexer' = makeTokenParser languageDef
