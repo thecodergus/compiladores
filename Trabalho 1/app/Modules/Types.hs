@@ -68,5 +68,6 @@ data Comando
   | Atrib Id Expr
   | Leitura Id
   | Imp Expr
-  | Ret Expr
+  | Ret (Maybe Expr)
+  | Proc Id [Expr]
   deriving (Show)
