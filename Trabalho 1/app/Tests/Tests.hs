@@ -21,4 +21,4 @@ tests = do
       hspec VariableDeclarationsSpec.spec
       hspec FunctionsAndParametersSpec.spec
       hspec CommandsSpec.spec
-      ProgramParserSpec.spec
+      hspec ProgramParserSpec.spec

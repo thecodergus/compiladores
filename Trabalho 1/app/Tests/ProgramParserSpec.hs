@@ -3,7 +3,7 @@ import Text.Parsec (Parsec, ParseError, parse)
 
 import Test.Hspec (Expectation, Spec, describe, it, shouldBe, hspec)
 import Types
-    ( Type(TDouble, TInt),
+    ( Type(TDouble, TInt, TVoid),
       Var((:#:)),
       Programa(Prog),
       Funcao((:->:)),
@@ -16,11 +16,11 @@ import ProgramParser (programParser)
 parseTest :: Parsec String () a -> String -> Either ParseError a
 parseTest p = parse p ""
 
-spec :: IO ()
-spec = hspec $ do
+spec :: Spec
+spec = do
   describe "programParser" $ do
     it "parses an empty program" $ do
-      parseTest programParser "void main() {}" `shouldBe` Right (Prog [] [] [] [])
+      parseTest programParser "void main() {}" `shouldBe` Right (Prog ["main" :->: ([],TVoid)] [] [] [])
 
     it "parses a program with a single function declaration" $ do
       let prog = "int sum(int a, int b);\nvoid main() {}"
