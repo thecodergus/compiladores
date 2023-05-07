@@ -7,3 +7,15 @@ OK: FunctionsAndParameters: responsável pela análise de funções e parâmetro
 OK: Commands: responsável pela análise dos comandos.
 OK: BlocksAndCommandLists: responsável pela análise de blocos e listas de comandos.
 ProgramParser: responsável pela combinação dos módulos anteriores e análise do símbolo inicial <Programa>.
+
+
+Ta aceitando: 
+"int main() int;{a = 2;b=3;}"
+Right (Prog ["main" :->: ([],TInt)] [] [] [Atrib "a" (Const (CInt 2)),Atrib "b" (Const (CInt 3))])
+
+"int main() int;{a = 2;b=3;return 0;}"
+Right (Prog ["main" :->: ([],TInt)] [] [] [Atrib "a" (Const (CInt 2)),Atrib "b" (Const (CInt 3)),Ret (Just (Const (CInt 0)))])
+
+Não esta aceitando:
+"int main(){int a = 2; double b=3;}"
+"void main(){}"
