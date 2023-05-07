@@ -17,8 +17,7 @@ command =
       atribCommand,
       readCommand,
       printCommand,
-      returnCommand,
-      procCommand
+      returnCommand
     ]
 
 -- Função auxiliar para analisar comandos If
@@ -97,9 +96,9 @@ block :: Parsec String () Bloco
 block = many1 command
 
 -- Função auxiliar para analisar comandos de chamada de procedimento (Proc)
-procCommand :: Parsec String () Comando
-procCommand = do
-  procName <- identifier'
-  args <- parens' (commaSep' arithmeticExpression)
-  semi'
-  return (Proc procName args)
+-- procCommand :: Parsec String () Comando
+-- procCommand = do
+--   procName <- identifier'
+--   args <- parens' (commaSep' arithmeticExpression)
+--   semi'
+--   return (Proc procName args)

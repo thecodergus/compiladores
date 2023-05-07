@@ -4,6 +4,6 @@ Ok: RelationalExpressions: responsável pela análise de expressões relacionais
 Ok: LogicalExpressions: responsável pela análise de expressões lógicas.
 Ok: VariableDeclarations: responsável pela análise de declarações de variáveis e tipos.
 OK: FunctionsAndParameters: responsável pela análise de funções e parâmetros.
-Commands: responsável pela análise dos comandos.
+OK: Commands: responsável pela análise dos comandos.
 BlocksAndCommandLists: responsável pela análise de blocos e listas de comandos.
 ProgramParser: responsável pela combinação dos módulos anteriores e análise do símbolo inicial <Programa>.
