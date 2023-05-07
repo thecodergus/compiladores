@@ -2,10 +2,11 @@ module Commands where
 
 import ArithmeticExpressions (arithmeticExpression)
 import Lexer (braces', commaSep', identifier', parens', reserved', reservedOp', semi', stringLiteral', whiteSpace')
-import LogicalExpressions (logicalExpression)
+import LogicalExpressions (logicalExpression, logicalExpression')
 import RelationalExpressions (relationalExpression)
 import Text.Parsec (Parsec, choice, many, many1, optionMaybe, optional, try, (<|>))
 import Types (Bloco, Comando (..), Expr, ExprL (..), ExprR)
+import Data.Maybe (fromMaybe)
 
 -- Função principal para analisar comandos
 command :: Parsec String () Comando
@@ -24,11 +25,26 @@ command =
 ifCommand :: Parsec String () Comando
 ifCommand = do
   reserved' "if"
-  cond <- parens' logicalExpression
-  trueBlock <- braces' block
-  reserved' "else"
-  falseBlock <- braces' block
-  return (If cond trueBlock falseBlock)
+  cond <-
+    try (parens' logicalExpression)
+      <|> try (parens' $ Rel <$> relationalExpression)
+      <|> try (Rel <$> relationalExpression)
+
+  trueBlock <-
+    try (braces' block)
+      <|> try (braces' $ return [])
+      <|> try (braces' $ many1 command)
+      <|> try (braces' $ many command)
+
+  falseBlock <- optionMaybe $ do
+    reserved' "else"
+    try (braces' block)
+      <|> try (braces' $ return [])
+      <|> try (braces' $ many1 command)
+      <|> try (braces' $ many command)
+
+  return (If cond trueBlock (fromMaybe [] falseBlock))
+
 
 -- Função auxiliar para analisar comandos While
 whileCommand :: Parsec String () Comando
