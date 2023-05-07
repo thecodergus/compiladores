@@ -30,18 +30,11 @@ ifCommand = do
       <|> try (parens' $ Rel <$> relationalExpression)
       <|> try (Rel <$> relationalExpression)
 
-  trueBlock <-
-    try (braces' block)
-      <|> try (braces' $ return [])
-      <|> try (braces' $ many1 command)
-      <|> try (braces' $ many command)
+  trueBlock <- commandBlock
 
   falseBlock <- optionMaybe $ do
     reserved' "else"
-    try (braces' block)
-      <|> try (braces' $ return [])
-      <|> try (braces' $ many1 command)
-      <|> try (braces' $ many command)
+    commandBlock
 
   return (If cond trueBlock (fromMaybe [] falseBlock))
 
@@ -50,9 +43,21 @@ ifCommand = do
 whileCommand :: Parsec String () Comando
 whileCommand = do
   reserved' "while"
-  cond <- parens' logicalExpression
-  loopBlock <- braces' block
-  return (While cond loopBlock)
+  cond <-
+    try (parens' logicalExpression)
+      <|> try (parens' $ Rel <$> relationalExpression)
+      <|> try (Rel <$> relationalExpression)
+
+  While cond <$> commandBlock
+
+-- Função auxiliar para analisar blocos de comandos
+commandBlock :: Parsec String () [Comando]
+commandBlock =
+  try (braces' block)
+    <|> try (braces' $ return [])
+    <|> try (braces' $ many1 command)
+    <|> try (braces' $ many command)
+
 
 -- Função auxiliar para analisar comandos de atribuição
 atribCommand :: Parsec String () Comando
