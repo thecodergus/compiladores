@@ -15,7 +15,6 @@ data Type
 data TCons
   = CDouble Double
   | CInt Integer
-  | CString String
   deriving (Show)
 
 -- Representação das expressões aritméticas na linguagem.
