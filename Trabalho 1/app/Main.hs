@@ -1,7 +1,10 @@
-import TestsAndDebugging
+import Tests (tests)
 
 main :: IO ()
 main = do
-  let exampleProgram = "int a = 0; double c = 2;"
-  let result = testParser exampleProgram
-  printTestResult result
+  hspec spec
+
+-- let exampleProgram = "int a = 0;"
+-- let exampleProgram = "int a(){}"
+-- let result = testParser exampleProgram
+-- printTestResult result
