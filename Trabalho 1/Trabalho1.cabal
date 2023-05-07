@@ -29,6 +29,7 @@ executable Trabalho1
     ArithmeticExpressionsSpec
     BlocksAndCommandLists
     Commands
+    CommandsSpec
     FunctionsAndParameters
     Lexer
     LexerSpec

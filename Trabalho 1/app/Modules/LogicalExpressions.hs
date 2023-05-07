@@ -18,7 +18,6 @@ logicalExpression' = do
   whiteSpace'
   return (op e1 e2)
 
-
 -- Função auxiliar para analisar a expressão NOT
 notExpression :: Parsec String () ExprL
 notExpression = do
