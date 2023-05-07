@@ -9,13 +9,13 @@ data Type
   | TInt
   | TString
   | TVoid
-  deriving (Show)
+  deriving (Eq, Show)
 
 -- Representação de constantes na linguagem: Double, Int e String.
 data TCons
   = CDouble Double
   | CInt Integer
-  deriving (Show)
+  deriving (Eq, Show)
 
 -- Representação das expressões aritméticas na linguagem.
 data Expr
@@ -28,7 +28,7 @@ data Expr
   | IdVar String
   | Chamada Id [Expr]
   | Lit String
-  deriving (Show)
+  deriving (Eq, Show)
 
 -- Representação das expressões relacionais na linguagem.
 data ExprR
@@ -38,7 +38,7 @@ data ExprR
   | Expr :>: Expr
   | Expr :<=: Expr
   | Expr :>=: Expr
-  deriving (Show)
+  deriving (Eq, Show)
 
 -- Representação das expressões lógicas na linguagem.
 data ExprL
@@ -46,16 +46,16 @@ data ExprL
   | ExprL :|: ExprL
   | Not ExprL
   | Rel ExprR
-  deriving (Show)
+  deriving (Eq, Show)
 
 -- Representação de variáveis na linguagem (identificador e tipo).
-data Var = Id :#: Type deriving (Show)
+data Var = Id :#: Type deriving (Eq, Show)
 
 -- Representação de funções na linguagem (identificador, lista de parâmetros e tipo de retorno).
-data Funcao = Id :->: ([Var], Type) deriving (Show)
+data Funcao = Id :->: ([Var], Type) deriving (Eq, Show)
 
 -- Representação do programa na linguagem (lista de funções e bloco principal).
-data Programa = Prog [Funcao] [(Id, [Var], Bloco)] [Var] Bloco deriving (Show)
+data Programa = Prog [Funcao] [(Id, [Var], Bloco)] [Var] Bloco deriving (Eq, Show)
 
 -- Representação de um bloco de comandos na linguagem.
 type Bloco = [Comando]
@@ -69,4 +69,4 @@ data Comando
   | Imp Expr
   | Ret (Maybe Expr)
   | Proc Id [Expr]
-  deriving (Show)
+  deriving (Eq, Show)
