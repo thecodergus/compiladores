@@ -25,3 +25,15 @@ spec = do
 
     it "parses void variable declaration" $ do
       parseTest variableDeclarations "void v1;" `shouldBe` Right ["v1" :#: TVoid]
+
+    it "parses single int variable declaration" $ do
+      parseTest variableDeclarations "int a;" `shouldBe` Right ["a" :#: TInt]
+
+    it "parses single double variable declaration" $ do
+      parseTest variableDeclarations "double x;" `shouldBe` Right ["x" :#: TDouble]
+
+    it "parses single string variable declaration" $ do
+      parseTest variableDeclarations "string s1;" `shouldBe` Right ["s1" :#: TString]
+
+    it "parses single void variable declaration" $ do
+      parseTest variableDeclarations "void v1;" `shouldBe` Right ["v1" :#: TVoid]

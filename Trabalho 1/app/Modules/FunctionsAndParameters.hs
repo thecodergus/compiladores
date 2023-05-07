@@ -11,7 +11,6 @@ functionDefinition = do
   whiteSpace'
   funcName <- identifier'
   params <- parens' parameters
-  _ <- braces' (many anyChar) -- Ignora o corpo da função
   return (funcName :->: (params, retType))
 
 -- Função auxiliar para analisar o tipo de retorno de uma função
