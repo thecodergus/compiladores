@@ -32,10 +32,10 @@ executable Trabalho1
     FunctionsAndParameters
     Lexer
     LexerSpec
-    LexerTest
     LogicalExpressions
     ProgramParser
     RelationalExpressions
+    RelationalExpressionsSpec
     Tests
     Types
     VariableDeclarations

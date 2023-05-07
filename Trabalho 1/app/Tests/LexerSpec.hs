@@ -2,7 +2,7 @@ module LexerSpec where
 
 import Lexer (braces', identifier', reserved', reservedOp', semi', whiteSpace')
 import Test.Hspec
-import Text.Parsec (ParseError, Parsec, parse)
+import Text.Parsec (ParseError, Parsec, parse, string)
 
 parseTest :: Parsec String () a -> String -> Either ParseError a
 parseTest parser input = parse parser "" input
@@ -32,4 +32,11 @@ spec = do
       parseTest whiteSpace' "   \t   \n" `shouldBe` Right ()
 
     it "parses braces" $
-      parseTest (braces' $ return "inside") "{inside}" `shouldBe` Right "inside"
+      parseTest (braces' $ string "inside") "{inside}" `shouldBe` Right "inside"
+    
+    it "parses braces with multiple characters inside" $
+      parseTest (braces' $ string "content") "{content}" `shouldBe` Right "content"
+
+    it "parses braces with nested braces" $
+      parseTest (braces' $ string "outer" *> braces' (string "inner")) "{outer{inner}}" `shouldBe` Right "inner"
+
