@@ -33,6 +33,7 @@ executable Trabalho1
     Lexer
     LexerSpec
     LogicalExpressions
+    LogicalExpressionsSpec
     ProgramParser
     RelationalExpressions
     RelationalExpressionsSpec

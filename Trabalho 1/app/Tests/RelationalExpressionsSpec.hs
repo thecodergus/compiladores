@@ -1,7 +1,6 @@
 module RelationalExpressionsSpec where
 
-import Test.Hspec
-import Test.Hspec.Parsec
+import Test.Hspec (Spec, describe, it, shouldBe)
 import Text.Parsec (Parsec, parse)
 import RelationalExpressions (relationalExpression)
 import Types (Expr (..), ExprR (..), TCons (..))
@@ -14,7 +13,7 @@ parseTest parser input = case parse parser "" input of
 
 spec :: Spec
 spec = do
-  describe "relationalExpression" $ do
+  describe "RelationalExpression" $ do
     it "parses less than" $
       parseTest relationalExpression "a < b" `shouldBe` Right (IdVar "a" :<: IdVar "b")
 

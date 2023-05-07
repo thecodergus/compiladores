@@ -9,7 +9,7 @@ parseTest parser input = parse parser "" input
 
 spec :: Spec
 spec = do
-  describe "Lexer tests" $ do
+  describe "Lexer" $ do
     it "parses an identifier" $
       parseTest identifier' "someIdentifier" `shouldBe` Right "someIdentifier"
 
