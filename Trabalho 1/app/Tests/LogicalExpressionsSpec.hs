@@ -14,7 +14,7 @@ parseTest parser input = case parse parser "" input of
 
 spec :: Spec
 spec = do
-  describe "logicalExpression" $ do
+  describe "LogicalExpression" $ do
     it "parses AND operator" $
       parseTest logicalExpression "(a < b) && b > c" `shouldBe` Right ((Rel (IdVar "a" :<: IdVar "b")) :&: (Rel (IdVar "b" :>: IdVar "c")))
 

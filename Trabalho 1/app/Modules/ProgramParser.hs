@@ -15,4 +15,5 @@ programParser = do
   varDeclarations <- variableDeclarations
   mainBlock <- block
   eof
-  return $ Prog funDeclarations [] varDeclarations mainBlock
+  return $ Prog funDeclarations [] [] mainBlock
+  -- return $ Prog funDeclarations [] varDeclarations mainBlock
