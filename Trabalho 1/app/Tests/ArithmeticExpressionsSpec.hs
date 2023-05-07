@@ -10,7 +10,7 @@ main = hspec spec
 
 spec :: Spec
 spec = do
-  describe "arithmeticExpression" $ do
+  describe "ArithmeticExpression" $ do
     it "parses integer constants" $
       parse arithmeticExpression "" "42" `shouldBe` Right (Const (CInt 42))
 
