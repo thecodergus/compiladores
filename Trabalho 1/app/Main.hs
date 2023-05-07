@@ -2,7 +2,7 @@ import Tests (tests)
 
 main :: IO ()
 main = do
-  hspec spec
+  tests
 
 -- let exampleProgram = "int a = 0;"
 -- let exampleProgram = "int a(){}"
