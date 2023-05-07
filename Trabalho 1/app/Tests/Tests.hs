@@ -10,6 +10,7 @@ import qualified LogicalExpressionsSpec
 import qualified CommandsSpec
 import qualified VariableDeclarationsSpec
 import qualified FunctionsAndParametersSpec
+import qualified ProgramParserSpec
 
 tests :: IO ()
 tests = do
@@ -20,3 +21,4 @@ tests = do
       hspec VariableDeclarationsSpec.spec
       hspec FunctionsAndParametersSpec.spec
       hspec CommandsSpec.spec
+      ProgramParserSpec.spec
