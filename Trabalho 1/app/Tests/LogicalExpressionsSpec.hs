@@ -16,10 +16,10 @@ spec :: Spec
 spec = do
   describe "LogicalExpression" $ do
     it "parses AND operator" $
-      parseTest logicalExpression "(a < b) && b > c" `shouldBe` Right ((Rel (IdVar "a" :<: IdVar "b")) :&: (Rel (IdVar "b" :>: IdVar "c")))
+      parseTest logicalExpression "(a < b) && b > c" `shouldBe` Right (Rel (IdVar "a" :<: IdVar "b") :&: Rel (IdVar "b" :>: IdVar "c"))
 
     it "parses OR operator" $
-      parseTest logicalExpression "a < b || b > c" `shouldBe` Right ((Rel (IdVar "a" :<: IdVar "b")) :|: (Rel (IdVar "b" :>: IdVar "c")))
+      parseTest logicalExpression "a < b || b > c" `shouldBe` Right (Rel (IdVar "a" :<: IdVar "b") :|: Rel (IdVar "b" :>: IdVar "c"))
 
     it "parses NOT operator" $
       parseTest logicalExpression "!(a < b)" `shouldBe` Right (Not (Rel (IdVar "a" :<: IdVar "b")))
