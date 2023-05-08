@@ -1,7 +1,7 @@
 module FunctionsAndParameters where
 
 import Lexer (braces', identifier', parens', reserved', semi', whiteSpace', commaSep')
-import Text.Parsec (Parsec, anyChar, char, many, sepBy, try, (<|>))
+import Text.Parsec (Parsec, anyChar, char, many, sepBy, try, (<|>), choice)
 import Types (Funcao (..), Type (..), Var (..), Id, Bloco, ExprL ((:|:)))
 import BlocksAndCommandLists (block)
 
@@ -17,10 +17,13 @@ functionDefinition = do
 -- Função auxiliar para analisar o tipo de retorno de uma função
 returnType :: Parsec String () Type
 returnType =
-  try (reserved' "int" >> return TInt)
-    <|> try (reserved' "double" >> return TDouble)
-    <|> try (reserved' "string" >> return TString)
-    <|> (reserved' "void" >> return TVoid)
+  choice
+    [ try (reserved' "int" >> return TInt),
+      try (reserved' "double" >> return TDouble),
+      try (reserved' "string" >> return TString),
+      reserved' "void" >> return TVoid
+    ]
+
 
 -- Função auxiliar para analisar os parâmetros de uma função
 parameters :: Parsec String () [Var]

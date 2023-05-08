@@ -9,6 +9,9 @@ OK: BlocksAndCommandLists: responsável pela análise de blocos e listas de coma
 ProgramParser: responsável pela combinação dos módulos anteriores e análise do símbolo inicial <Programa>.
 
 
+
+Até aqui todos os casos de testes de todos os módulos foram bem-sucedidos, mas chegou aqui na função programParser e tudo desandou
+
 Ta aceitando: 
 "int main() int;{a = 2;b=3;}"
 Right (Prog ["main" :->: ([],TInt)] [] [] [Atrib "a" (Const (CInt 2)),Atrib "b" (Const (CInt 3))])
@@ -19,3 +22,6 @@ Right (Prog ["main" :->: ([],TInt)] [] [] [Atrib "a" (Const (CInt 2)),Atrib "b" 
 Não esta aceitando:
 "int main(){int a = 2; double b=3;}"
 "void main(){}"
+
+
+Onde ou o que pode estar gerando isso?
