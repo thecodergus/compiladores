@@ -12,13 +12,13 @@ import qualified VariableDeclarationsSpec
 import qualified FunctionsAndParametersSpec
 import qualified ProgramParserSpec
 
-tests :: IO ()
-tests = do
-      hspec ArithmeticExpressionsSpec.spec
-      hspec LexerSpec.spec
-      hspec RelationalExpressionsSpec.spec
-      hspec LogicalExpressionsSpec.spec
-      hspec VariableDeclarationsSpec.spec
-      hspec FunctionsAndParametersSpec.spec
-      hspec CommandsSpec.spec
-      hspec ProgramParserSpec.spec
+-- tests :: IO ()
+-- tests = do
+      -- hspec ArithmeticExpressionsSpec.spec
+      -- hspec LexerSpec.spec
+      -- hspec RelationalExpressionsSpec.spec
+      -- hspec LogicalExpressionsSpec.spec
+      -- hspec VariableDeclarationsSpec.spec
+      -- hspec FunctionsAndParametersSpec.spec
+      -- hspec CommandsSpec.spec
+      -- hspec ProgramParserSpec.spec

@@ -55,7 +55,8 @@ data Var = Id :#: Type deriving (Eq, Show)
 data Funcao = Id :->: ([Var], Type) deriving (Eq, Show)
 
 -- Representação do programa na linguagem (lista de funções e bloco principal).
-data Programa = Prog [Funcao] [(Id, [Var], Bloco)] [Var] Bloco deriving (Eq, Show)
+-- Modifiquei para incluir a lista de variáveis locais de cada função
+data Programa = Prog [Funcao] [(Id, [Var], [Var], Bloco)] [Var] Bloco deriving (Eq, Show)
 
 -- Representação de um bloco de comandos na linguagem.
 type Bloco = [Comando]

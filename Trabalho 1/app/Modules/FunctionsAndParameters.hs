@@ -49,9 +49,9 @@ functionHeader = do
   return (funcName, params)
 
 -- Função auxiliar para analisar a definição de funções
-parseFunctionsWithParamsAndVars :: Parsec String () [(Id, [Var], Bloco, [Var])]
+parseFunctionsWithParamsAndVars :: Parsec String () [(Id, [Var], [Var], Bloco)]
 parseFunctionsWithParamsAndVars = do
   many $ do
     (funId, params) <- functionHeader
     (vars, funBlock) <- block'
-    return (funId, params, funBlock, vars)
+    return (funId, params, vars, funBlock)

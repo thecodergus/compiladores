@@ -13,7 +13,7 @@ block = braces' commandList
 -- Função auxiliar para analisar blocos com declarações de variáveis
 block' :: Parsec String () ([Var], Bloco)
 block' = braces' $ do
-  vars <- option [] (try variableDeclarations)
+  vars <- option [] (try variableDeclarations) -- tenta analisar declarações de variáveis
   cmds <- try commandList
   return (vars, cmds)
 
