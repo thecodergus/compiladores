@@ -62,7 +62,7 @@ data Programa = Prog [Funcao] [Funcao'] [Var] Bloco deriving (Eq, Show)
 -- Representação de um bloco de comandos na linguagem.
 type Bloco = [Comando]
 
--- Representação dos comandos na linguagem (if, while, atribuição, leitura, impressão e retorno).
+-- Representação dos comandos na linguagem (if, while, atribuição, leitura, impressão, retorno e chamada de função).
 data Comando
   = If ExprL Bloco Bloco
   | While ExprL Bloco

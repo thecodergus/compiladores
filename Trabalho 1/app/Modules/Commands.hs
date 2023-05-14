@@ -17,7 +17,8 @@ command =
       atribCommand,
       readCommand,
       printCommand,
-      returnCommand
+      returnCommand,
+      functionCall
     ]
 
 -- Função auxiliar para analisar comandos If
@@ -90,6 +91,15 @@ returnCommand = do
   mExpr <- optionMaybe (try arithmeticExpression)
   semi'
   return (Ret mExpr)
+
+-- Função auxiliar para analisar chamadas de função
+functionCall :: Parsec String () Comando
+functionCall = do
+  funcName <- identifier'
+  args <- parens' (commaSep' expression)
+  semi'
+  return $ Proc funcName args
+
 
 -- Função para analisar um bloco de comandos
 block :: Parsec String () Bloco
