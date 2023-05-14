@@ -7,14 +7,19 @@ import Text.Parsec (Parsec, eof, many, try, (<|>), choice, manyTill, lookAhead)
 import Types (Bloco, Comando, Funcao, Programa (..), Var, Id)
 import VariableDeclarations (variableDeclarations)
 import Control.Monad (void)
+import Test.QuickCheck (Fun(Fun))
 
 -- Função principal para analisar um programa completo
 programParser :: Parsec String () Programa
 programParser = do
   whiteSpace'
-  funDeclarations <- many (try functionDefinition)
-  funsWithParams <- parseFunctionsWithParams
-  varDeclarations <- variableDeclarations
-  mainBlock <- block
+  funDeclarations <- try (many (try functionDefinition))
+  funsWithParams <- try parseFunctionsWithParams
+  -- varDeclarations <- variableDeclarations
+  -- mainBlock <- block
   eof
-  return $ Prog funDeclarations funsWithParams varDeclarations mainBlock
+  return $ Prog funDeclarations funsWithParams [] []
+
+
+
+  -- my_program:: Parsec String () (Funcao, [Var])'

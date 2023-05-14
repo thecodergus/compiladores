@@ -1,10 +1,7 @@
-import Tests (tests)
+import ProgramParser (programParser)
+import Text.Parsec (parse)
+
 
 main :: IO ()
 main = do
-  tests
-
--- let exampleProgram = "int a = 0;"
--- let exampleProgram = "int a(){}"
--- let result = testParser exampleProgram
--- printTestResult result
+  print $ parse programParser "" "void main(int a, int b); void main(int a, int b){a= 2;}"
