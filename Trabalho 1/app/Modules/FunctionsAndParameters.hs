@@ -52,13 +52,16 @@ functionHeader = do
 parseFunctionsWithParamsAndVars :: Parsec String () [(Id, [Var], [Var], Bloco)]
 parseFunctionsWithParamsAndVars = do
   many $ do
-    (funId, params) <- functionHeader
-    (vars, funBlock) <- block'
+    whiteSpace'
+    (funId, params) <- try functionHeader
+    (vars, funBlock) <- try block'
     return (funId, params, vars, funBlock)
+
 
 -- Função auxiliar para analisar a definição de funções
 parseFunctionsWithParamsAndVars' :: Parsec String () (Id, [Var], [Var], Bloco)
 parseFunctionsWithParamsAndVars' = do
+    whiteSpace'
     (funId, params) <- functionHeader
     (vars, funBlock) <- block'
     return (funId, params, vars, funBlock)

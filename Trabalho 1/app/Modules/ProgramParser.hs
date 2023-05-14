@@ -9,22 +9,28 @@ import Control.Monad (void)
 import Test.QuickCheck (Fun(Fun))
 import VariableDeclarations (variableDeclarations)
 import Data.Either (partitionEithers)
+import Data.Maybe (listToMaybe)
 
 -- Função principal para analisar um programa completo
 programParser :: Parsec String () Programa
 programParser = do
   whiteSpace' -- ignora espaços em branco
-  
-  let varOrFun = try (Left <$> functionDefinition) <|> try (Right <$> variableDeclarations) -- tenta analisar uma definição de função ou uma declaração de variável
-  declarations <- manyTill varOrFun (lookAhead (try (void parseFunctionsWithParamsAndVars) <|> void eof)) -- analisa definições de funções e declarações de variáveis
-  
-  let (funDeclarations, variableDeclarations) = partitionEithers declarations -- separa as declarações de funções das declarações de variáveis
-  
-  funsWithParams <- option [] (try parseFunctionsWithParamsAndVars) -- analisa definições de funções
-  
-  mainBlock <- option [] (try block) -- analisa o bloco principal
-  
+  let varOrFun =
+        try (Left <$> functionDefinition)
+          <|> try (Right . Left <$> variableDeclarations)
+          <|> try (Right . Right . Left <$> parseFunctionsWithParamsAndVars)
+          <|> try (Right . Right . Right <$> block)
+
+  declarations <- manyTill varOrFun (lookAhead eof)
+
+  let (funDeclarations, rest) = partitionEithers declarations
+  let (variableDeclarations, rest') = partitionEithers rest
+  let (funsWithParams, mainBlocks) = partitionEithers rest'
+
+  let mainBlock = case mainBlocks of
+        [] -> []
+        (b : _) -> b
+
   whiteSpace' -- ignora espaços em branco
   eof -- verifica se chegou ao fim do arquivo
-
-  return $ Prog funDeclarations funsWithParams (concat variableDeclarations) mainBlock -- retorna um programa com as declarações de funções, definições de funções, declarações de variáveis e o bloco principal
+  return $ Prog funDeclarations (concat funsWithParams) (concat variableDeclarations) mainBlock
