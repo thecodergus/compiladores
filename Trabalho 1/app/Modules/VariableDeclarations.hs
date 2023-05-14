@@ -2,7 +2,7 @@ module VariableDeclarations where
 
 import Lexer (commaSep', identifier', reserved', semi', whiteSpace')
 import Text.Parsec (Parsec, many, try, (<|>))
-import Types 
+import Types ( Var(..), Type(..) ) 
 
 -- Função principal para analisar declarações de variáveis
 variableDeclarations :: Parsec String () [Var]
