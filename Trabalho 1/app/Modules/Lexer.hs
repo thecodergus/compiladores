@@ -4,7 +4,7 @@ import Text.Parsec (Parsec, alphaNum, char, letter, (<|>))
 import Text.Parsec.Language (emptyDef)
 import Text.Parsec.Token (LanguageDef (..), TokenParser, braces, commaSep, float, identifier, integer, makeTokenParser, parens, reserved, reservedOp, semi, stringLiteral, symbol, whiteSpace)
 import Text.ParserCombinators.Parsec.Language (GenLanguageDef (..))
-import Types (Expr(IdVar), Id)
+import Types (Expr(IdVar), Id, TCons (CDouble, CInt))
 
 -- Definição da linguagem
 languageDef :: LanguageDef ()
@@ -71,3 +71,8 @@ whiteSpace' = whiteSpace lexer'
 -- Funções auxiliares para analisar tokens específicos, tokens: símbolos
 symbol' :: String -> Parsec String () String
 symbol' = symbol lexer'
+
+-- Funções auxiliares para analisar tokens específicos, tokens: constantes
+const' :: Parsec String () TCons
+const' = CInt <$> integer'
+    <|> CDouble <$> float'

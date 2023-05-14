@@ -1,9 +1,9 @@
 module RelationalExpressions where
 
 import ArithmeticExpressions (arithmeticExpression)
-import Lexer (reservedOp', whiteSpace')
+import Lexer (reservedOp', whiteSpace', parens', reserved', identifier')
 import Text.Parsec (Parsec, chainl1, try, (<|>))
-import Types (Expr, ExprR (..))
+import Types (Expr (Const, IdVar, Lit), ExprR (..), Type (TInt), TCons (CInt))
 
 -- Função principal para analisar expressões relacionais
 relationalExpression :: Parsec String () ExprR
@@ -24,3 +24,4 @@ relationalOperator =
     <|> try (reservedOp' ">" >> return (:>:))
     <|> try (reservedOp' "<=" >> return (:<=:))
     <|> (reservedOp' ">=" >> return (:>=:))
+

@@ -4,21 +4,23 @@ import ArithmeticExpressions (arithmeticExpression)
 import Lexer (braces', commaSep', identifier', parens', reserved', reservedOp', semi', stringLiteral', whiteSpace')
 import LogicalExpressions (logicalExpression, logicalExpression')
 import RelationalExpressions (relationalExpression)
-import Text.Parsec (Parsec, choice, many, many1, optionMaybe, optional, try, (<|>))
-import Types (Bloco, Comando (..), Expr, ExprL (..), ExprR)
+import Text.Parsec (Parsec, choice, many, many1, optionMaybe, optional, try, (<|>), sepBy)
+import Types (Bloco, Comando (..), Expr (Chamada), ExprL (..), ExprR, Id)
 import Data.Maybe (fromMaybe)
+import VariableDeclarations (expression)
+import Text.Parsec.Char (char)
 
 -- Função principal para analisar comandos
 command :: Parsec String () Comando
 command =
   choice
-    [ ifCommand,
-      whileCommand,
-      atribCommand,
-      readCommand,
-      printCommand,
-      returnCommand,
-      functionCall
+    [ try ifCommand,
+      try whileCommand,
+      try atribCommand,
+      try readCommand,
+      try printCommand,
+      try returnCommand,
+      try functionCall
     ]
 
 -- Função auxiliar para analisar comandos If
@@ -92,23 +94,20 @@ returnCommand = do
   semi'
   return (Ret mExpr)
 
--- Função auxiliar para analisar chamadas de função
+-- Função para analisar chamadas de funções
 functionCall :: Parsec String () Comando
 functionCall = do
-  funcName <- identifier'
-  args <- parens' (commaSep' expression)
-  semi'
-  return $ Proc funcName args
+  (funcName, params) <- functionCall'
+  return (Proc funcName params)
 
+-- Função auxiliar para analisar chamadas de funções
+functionCall' :: Parsec String () (Id, [Expr])
+functionCall' = do
+  funcName <- identifier'
+  params <- parens' $ expression `sepBy` (char ',' >> whiteSpace')
+  semi'
+  return (funcName, params)
 
 -- Função para analisar um bloco de comandos
 block :: Parsec String () Bloco
 block = many1 command
-
--- Função auxiliar para analisar comandos de chamada de procedimento (Proc)
--- procCommand :: Parsec String () Comando
--- procCommand = do
---   procName <- identifier'
---   args <- parens' (commaSep' arithmeticExpression)
---   semi'
---   return (Proc procName args)
