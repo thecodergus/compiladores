@@ -1,0 +1,27 @@
+OK: Lexer: responsável pela análise léxica e definição dos tokens.
+Ok: ArithmeticExpressions: responsável pela análise de expressões aritméticas.
+Ok: RelationalExpressions: responsável pela análise de expressões relacionais.
+Ok: LogicalExpressions: responsável pela análise de expressões lógicas.
+Ok: VariableDeclarations: responsável pela análise de declarações de variáveis e tipos.
+OK: FunctionsAndParameters: responsável pela análise de funções e parâmetros.
+OK: Commands: responsável pela análise dos comandos.
+OK: BlocksAndCommandLists: responsável pela análise de blocos e listas de comandos.
+ProgramParser: responsável pela combinação dos módulos anteriores e análise do símbolo inicial <Programa>.
+
+
+
+Até aqui todos os casos de testes de todos os módulos foram bem-sucedidos, mas chegou aqui na função programParser e tudo desandou
+
+Ta aceitando: 
+"int main() int;{a = 2;b=3;}"
+Right (Prog ["main" :->: ([],TInt)] [] [] [Atrib "a" (Const (CInt 2)),Atrib "b" (Const (CInt 3))])
+
+"int main() int;{a = 2;b=3;return 0;}"
+Right (Prog ["main" :->: ([],TInt)] [] [] [Atrib "a" (Const (CInt 2)),Atrib "b" (Const (CInt 3)),Ret (Just (Const (CInt 0)))])
+
+Não esta aceitando:
+"int main(){int a = 2; double b=3;}"
+"void main(){}"
+
+
+Onde ou o que pode estar gerando isso?

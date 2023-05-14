@@ -1,67 +1,59 @@
--- Módulo Lexer.hs: Implementa os parsers para tokens básicos e palavras reservadas.
 module Lexer where
 
-import Text.Parsec (alphaNum, char, choice, letter, oneOf, (<|>))
-import Text.Parsec.Language (LanguageDef, emptyDef)
-import Text.Parsec.String (Parser)
-import Text.Parsec.Token
-  ( GenLanguageDef
-      ( LanguageDef,
-        caseSensitive,
-        commentEnd,
-        commentLine,
-        commentStart,
-        identLetter,
-        identStart,
-        nestedComments,
-        opLetter,
-        opStart,
-        reservedNames,
-        reservedOpNames
-      ),
-    GenTokenParser (reserved),
-    LanguageDef,
-    TokenParser,
-    makeTokenParser,
-  )
-import Text.ParserCombinators.Parsec ((<?>))
-import Types (Type (..))
+import Text.Parsec (Parsec, alphaNum, char, letter, (<|>))
+import Text.Parsec.Language (emptyDef)
+import Text.Parsec.Token (LanguageDef (..), TokenParser, braces, commaSep, float, identifier, integer, makeTokenParser, parens, reserved, reservedOp, semi, stringLiteral, symbol, whiteSpace)
+import Text.ParserCombinators.Parsec.Language (GenLanguageDef (..))
+import Types (Expr(IdVar), Id)
 
--- Define a linguagem de programação específica.
+lexer' :: TokenParser ()
+lexer' = makeTokenParser languageDef
+
 languageDef :: LanguageDef ()
 languageDef =
-  LanguageDef
+  emptyDef
     { commentStart = "/*",
       commentEnd = "*/",
-      commentLine = "#",
-      nestedComments = True,
+      commentLine = "//",
       identStart = letter <|> char '_',
       identLetter = alphaNum <|> char '_',
-      opStart = oneOf ":!#$%&*+./<=>?@\\^|-~",
-      opLetter = oneOf ":!#$%&*+./<=>?@\\^|-~",
-      reservedOpNames = ["+", "-", "*", "/", "==", "/=", "<", ">", "<=", ">=", "&&", "||", "!"],
-      reservedNames = ["int", "double", "string", "void", "return", "if", "else", "while", "print", "read"],
+      reservedNames = ["int", "double", "string", "void", "if", "else", "while", "return", "print", "read"],
+      reservedOpNames = ["+", "-", "*", "/", "=", "<", ">", "<=", ">=", "==", "/=", "&&", "||", "!"],
       caseSensitive = True
     }
 
--- Cria um lexer com base na definição da linguagem.
-lexer :: TokenParser ()
-lexer = makeTokenParser languageDef
+identifier' :: Parsec String () Id
+identifier' = identifier lexer'
 
--- Parser para os tipos de dados suportados pela linguagem.
-typeParser :: Parser Type
-typeParser =
-  fmap (const TInt) (reserved lexer "int")
-    <|> fmap (const TDouble) (reserved lexer "double")
-    <|> fmap (const TString) (reserved lexer "string")
-    <|> fmap (const TVoid) (reserved lexer "void")
+reserved' :: String -> Parsec String () ()
+reserved' = reserved lexer'
 
-tType :: Parser Type
-tType =
-  choice
-    [ reserved lexer "double" >> return TDouble,
-      reserved lexer "int" >> return TInt,
-      reserved lexer "string" >> return TString,
-      reserved lexer "void" >> return TVoid
-    ]
-    <?> "type"
+reservedOp' :: String -> Parsec String () ()
+reservedOp' = reservedOp lexer'
+
+parens' :: Parsec String () a -> Parsec String () a
+parens' = parens lexer'
+
+braces' :: Parsec String () a -> Parsec String () a
+braces' = braces lexer'
+
+commaSep' :: Parsec String () a -> Parsec String () [a]
+commaSep' = commaSep lexer'
+
+semi' :: Parsec String () String
+semi' = semi lexer'
+
+integer' :: Parsec String () Integer
+integer' = integer lexer'
+
+float' :: Parsec String () Double
+float' = float lexer'
+
+stringLiteral' :: Parsec String () String
+stringLiteral' = stringLiteral lexer'
+
+whiteSpace' :: Parsec String () ()
+whiteSpace' = whiteSpace lexer'
+
+symbol' :: String -> Parsec String () String
+symbol' = symbol lexer'
