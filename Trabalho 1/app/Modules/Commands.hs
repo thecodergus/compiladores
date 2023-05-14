@@ -7,7 +7,7 @@ import RelationalExpressions (relationalExpression)
 import Text.Parsec (Parsec, choice, many, many1, optionMaybe, optional, try, (<|>), sepBy)
 import Types (Bloco, Comando (..), Expr (Chamada), ExprL (..), ExprR, Id)
 import Data.Maybe (fromMaybe)
-import VariableDeclarations (expression)
+import VariableDeclarations (expression, functionCall')
 import Text.Parsec.Char (char)
 
 -- Função principal para analisar comandos
@@ -90,7 +90,7 @@ printCommand = do
 returnCommand :: Parsec String () Comando
 returnCommand = do
   reserved' "return"
-  mExpr <- optionMaybe (try arithmeticExpression)
+  mExpr <- optionMaybe (try expression)
   semi'
   return (Ret mExpr)
 
@@ -99,14 +99,6 @@ functionCall :: Parsec String () Comando
 functionCall = do
   (funcName, params) <- functionCall'
   return (Proc funcName params)
-
--- Função auxiliar para analisar chamadas de funções
-functionCall' :: Parsec String () (Id, [Expr])
-functionCall' = do
-  funcName <- identifier'
-  params <- parens' $ expression `sepBy` (char ',' >> whiteSpace')
-  semi'
-  return (funcName, params)
 
 -- Função para analisar um bloco de comandos
 block :: Parsec String () Bloco

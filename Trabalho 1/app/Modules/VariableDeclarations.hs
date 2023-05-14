@@ -2,8 +2,10 @@ module VariableDeclarations where
 
 import Lexer (commaSep', identifier', reserved', semi', whiteSpace', parens', stringLiteral', const')
 import Text.Parsec (Parsec, many, try, (<|>))
-import Types ( Var(..), Type(..), Expr (Const, IdVar, Lit), TCons (CInt) ) 
+import Types ( Var(..), Type(..), Expr (Const, IdVar, Lit, Chamada), TCons (CInt), Id ) 
 import Text.Parsec.Token ( GenTokenParser(stringLiteral) )
+import Text.Parsec.Combinator (sepBy)
+import Text.Parsec.Char (char)
 
 -- Função principal para analisar declarações de variáveis
 variableDeclarations :: Parsec String () [Var]
@@ -28,9 +30,23 @@ varType =
 
 -- Função principal para analisar expressões
 expression :: Parsec String () Expr
-expression = do
-  parens' expression
-    <|> (Const <$> const')
-    <|> (IdVar <$> identifier')
-    <|> (Lit <$> stringLiteral')
-    
+expression =
+  try (parens' expression)
+    <|> try (Const <$> const')
+    <|> try functionCallExpr
+    <|> try (IdVar <$> identifier')
+    <|> try (Lit <$> stringLiteral')
+
+
+-- Função auxiliar para analisar chamadas de funções
+functionCall' :: Parsec String () (Id, [Expr])
+functionCall' = do
+  funcName <- identifier'
+  params <- parens' $ expression `sepBy` (char ',' >> whiteSpace')
+  return (funcName, params)
+
+-- Função auxiliar para analisar chamadas de funções
+functionCallExpr :: Parsec String () Expr
+functionCallExpr = do
+  (funcName, params) <- functionCall'
+  return (Chamada funcName params)
