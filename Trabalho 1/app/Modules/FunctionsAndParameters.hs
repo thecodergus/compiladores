@@ -65,3 +65,4 @@ parseFunctionsWithParamsAndVars' = do
     (funId, params) <- functionHeader
     (vars, funBlock) <- block'
     return (funId, params, vars, funBlock)
+
