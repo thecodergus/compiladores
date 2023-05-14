@@ -55,3 +55,9 @@ parseFunctionsWithParamsAndVars = do
     (funId, params) <- functionHeader
     (vars, funBlock) <- block'
     return (funId, params, vars, funBlock)
+
+parseFunctionsWithParamsAndVars' :: Parsec String () (Id, [Var], [Var], Bloco)
+parseFunctionsWithParamsAndVars' = do
+    (funId, params) <- functionHeader
+    (vars, funBlock) <- block'
+    return (funId, params, vars, funBlock)
