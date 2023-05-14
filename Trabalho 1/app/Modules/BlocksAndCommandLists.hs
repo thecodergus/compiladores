@@ -17,8 +17,9 @@ block' = braces' $ do
   cmds <- try commandList
   return (vars, cmds)
 
-block'' = braces' $ many (whiteSpace' *> command <* whiteSpace')
+-- Função auxiliar para analisar blocos com declarações de variáveis
 block'' :: Parsec String () Bloco
+block'' = braces' $ many (whiteSpace' *> command <* whiteSpace')
 
 -- Função auxiliar para analisar listas de comandos
 commandList :: Parsec String () [Comando]
