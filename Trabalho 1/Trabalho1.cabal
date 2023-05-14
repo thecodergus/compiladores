@@ -30,7 +30,6 @@ executable Trabalho1
     Commands
     FunctionsAndParameters
     Lexer
-    LexerSpec
     LogicalExpressions
     ProgramParser
     RelationalExpressions
