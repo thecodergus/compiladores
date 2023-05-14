@@ -3,7 +3,7 @@ module FunctionsAndParameters where
 import Lexer (braces', identifier', parens', reserved', semi', whiteSpace', commaSep')
 import Text.Parsec (Parsec, anyChar, char, many, sepBy, try, (<|>), choice, option, optional)
 import Types (Funcao (..), Type (..), Var (..), Id, Bloco, ExprL ((:|:)))
-import BlocksAndCommandLists (block)
+import BlocksAndCommandLists (block, block')
 
 -- Função principal para analisar a definição de funções
 functionDefinition :: Parsec String () Funcao
@@ -49,9 +49,9 @@ functionHeader = do
   return (funcName, params)
 
 -- Função auxiliar para analisar a definição de funções
-parseFunctionsWithParams :: Parsec String () [(Id, [Var], Bloco)]
-parseFunctionsWithParams = do
+parseFunctionsWithParamsAndVars :: Parsec String () [(Id, [Var], Bloco, [Var])]
+parseFunctionsWithParamsAndVars = do
   many $ do
     (funId, params) <- functionHeader
-    funBlock <- block
-    return (funId, params, funBlock)
+    (vars, funBlock) <- block'
+    return (funId, params, funBlock, vars)
