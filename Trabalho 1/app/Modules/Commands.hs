@@ -66,7 +66,7 @@ atribCommand :: Parsec String () Comando
 atribCommand = do
   var <- identifier'
   reservedOp' "="
-  expr <- arithmeticExpression
+  expr <- expression
   semi'
   return (Atrib var expr)
 
