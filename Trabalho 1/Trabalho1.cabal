@@ -26,25 +26,16 @@ executable Trabalho1
   main-is:          Main.hs
   other-modules:
     ArithmeticExpressions
-    ArithmeticExpressionsSpec
     BlocksAndCommandLists
-    BlocksAndCommandListsSpec
     Commands
-    CommandsSpec
     FunctionsAndParameters
-    FunctionsAndParametersSpec
     Lexer
     LexerSpec
     LogicalExpressions
-    LogicalExpressionsSpec
     ProgramParser
-    ProgramParserSpec
     RelationalExpressions
-    RelationalExpressionsSpec
-    Tests
     Types
     VariableDeclarations
-    VariableDeclarationsSpec
 
   -- other-extensions:
   build-depends:
@@ -54,6 +45,6 @@ executable Trabalho1
     , parsec      >=3.1.14.0
     , QuickCheck  >=2.14.2
 
-  hs-source-dirs:   app app/Modules app/Tests
+  hs-source-dirs:   app app/Modules
   default-language: Haskell2010
   ghc-options:      -Wno-tabs
