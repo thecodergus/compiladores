@@ -82,7 +82,7 @@ readCommand = do
 printCommand :: Parsec String () Comando
 printCommand = do
   reserved' "print"
-  expr <- arithmeticExpression
+  expr <- expression
   semi'
   return (Imp expr)
 
