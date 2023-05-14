@@ -98,6 +98,7 @@ returnCommand = do
 functionCall :: Parsec String () Comando
 functionCall = do
   (funcName, params) <- functionCall'
+  semi'
   return (Proc funcName params)
 
 -- Função para analisar um bloco de comandos
