@@ -5,7 +5,7 @@ import FunctionsAndParameters (parseFunctionsWithParamsAndVars, functionDefiniti
 import Lexer (whiteSpace', reserved', parens')
 import Text.Parsec (Parsec, eof, many, try, (<|>), choice, manyTill, lookAhead, option)
 import Types (Bloco, Comando, Funcao, Programa (..), Var, Id)
-import Control.Monad (void)
+import Control.Monad (void, unless)
 import Test.QuickCheck (Fun(Fun))
 import VariableDeclarations (variableDeclarations)
 import Data.Either (partitionEithers)
@@ -19,6 +19,7 @@ programParser = do
       whiteSpace' -- ignora espaços em branco
       let varOrFun = -- analisa declarações de variáveis ou funções, e definições de funções
             try (Left . Left <$> variableDeclarations) -- analisa declarações de variáveis
+            <|> (Right . Right <$> command) -- analisa comandos
             <|> try (Left . Right <$> functionDefinition) -- analisa declarações de funções
             <|> try (Right . Left <$> parseFunctionsWithParamsAndVars) -- analisa definições de funções
 
@@ -27,7 +28,9 @@ programParser = do
       -- separa declarações de variáveis, definições de funções e comandos
       let (decVarsAndFuncs, rest) = partitionEithers declarations -- separa declarações de variáveis e funções
       let (variableDeclarations, functionDeclarations) = partitionEithers decVarsAndFuncs -- separa declarações de variáveis e funções
-      let (funsWithParams, _) = partitionEithers rest -- separa definições de funções e comandos
+      let (funsWithParams, commands) = partitionEithers rest -- separa definições de funções e comandos
+      unless (null commands) $ fail "Existem comandos fora do escopo de uma função, o que não é permitido."
+
 
       let variableDeclarations' = concat variableDeclarations -- concatena declarações de variáveis
       let funsWithParams' = concat funsWithParams -- concatena definições de funções
