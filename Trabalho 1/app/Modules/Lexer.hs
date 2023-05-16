@@ -54,11 +54,7 @@ semi' = semi lexer'
 
 -- Funções auxiliares para analisar tokens específicos, tokens: inteiros
 integer' :: Parsec String () Integer
-integer' = do
-  n <- integer lexer'
-  notFollowedBy (char '.')
-  return n
-
+integer' = integer lexer'
 
 -- Funções auxiliares para analisar tokens específicos, tokens: ponto flutuante
 float' :: Parsec String () Double
@@ -78,6 +74,8 @@ symbol' = symbol lexer'
 
 -- Funções auxiliares para analisar tokens específicos, tokens: constantes
 const' :: Parsec String () TCons
-const' =
-    try (CInt <$> integer')
-    <|> try (CDouble <$> float')
+const' = do
+  val <- try (Right <$> float') <|> try (Left <$> integer')
+  return $ case val of
+    Left i -> CInt i
+    Right d -> CDouble d
