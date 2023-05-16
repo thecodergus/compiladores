@@ -1,6 +1,6 @@
 module Lexer where
 
-import Text.Parsec (Parsec, alphaNum, char, letter, (<|>))
+import Text.Parsec (Parsec, alphaNum, char, letter, (<|>), notFollowedBy, try)
 import Text.Parsec.Language (emptyDef)
 import Text.Parsec.Token (LanguageDef (..), TokenParser, braces, commaSep, float, identifier, integer, makeTokenParser, parens, reserved, reservedOp, semi, stringLiteral, symbol, whiteSpace)
 import Text.ParserCombinators.Parsec.Language (GenLanguageDef (..))
@@ -54,7 +54,11 @@ semi' = semi lexer'
 
 -- Funções auxiliares para analisar tokens específicos, tokens: inteiros
 integer' :: Parsec String () Integer
-integer' = integer lexer'
+integer' = do
+  n <- integer lexer'
+  notFollowedBy (char '.')
+  return n
+
 
 -- Funções auxiliares para analisar tokens específicos, tokens: ponto flutuante
 float' :: Parsec String () Double
@@ -74,5 +78,6 @@ symbol' = symbol lexer'
 
 -- Funções auxiliares para analisar tokens específicos, tokens: constantes
 const' :: Parsec String () TCons
-const' = CInt <$> integer'
-    <|> CDouble <$> float'
+const' =
+    try (CInt <$> integer')
+    <|> try (CDouble <$> float')
