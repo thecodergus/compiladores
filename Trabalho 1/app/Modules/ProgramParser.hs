@@ -29,7 +29,8 @@ programParser = do
       let (decVarsAndFuncs, rest) = partitionEithers declarations -- separa declarações de variáveis e funções
       let (variableDeclarations, functionDeclarations) = partitionEithers decVarsAndFuncs -- separa declarações de variáveis e funções
       let (funsWithParams, commands) = partitionEithers rest -- separa definições de funções e comandos
-      unless (null commands) $ fail "Existem comandos fora do escopo de uma função, o que não é permitido."
+      
+      unless (null commands) $ fail "Existem comandos fora do escopo de uma função, o que não é permitido." -- verifica se existem comandos fora do escopo de uma função
 
 
       let variableDeclarations' = concat variableDeclarations -- concatena declarações de variáveis
