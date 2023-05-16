@@ -13,8 +13,9 @@ main = do
   -- print $ parse programParser "" "void main(int a, int b); void main(int a, int b){int a; a = 2;} int b(){return 2;} int c(){return 2;}"
   -- print $ parse programParser "" "void main(int a, int b); void main(int a, int b){} int b(){return 2;} int c(){b(); return 2;}"
   -- print $ parse programParser "" "int main(int a, int b); void main(int a, int b){return b();}"
-  -- print $ parse programParser "" "int main(int a, int b); void main(int a, int b){a = b(); return b();}"
-  print $ "Digite o caminho para o arquivo de teste: "
+  -- print $ parse programParser "" "int main(int a, int b); print(a); void main(int a, int b){a = b(); return b();}"
+  -- print $ parse programParser "" "void main(int a, int b){double a; a = 2.5; return 0;}"
+  print "Digite o caminho para o arquivo de teste: "
   filePath <- getLine
   input <- readFile filePath
   case parse programParser "" input of
