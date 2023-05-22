@@ -34,6 +34,7 @@ expression =
   try (parens' expression)
     <|> try (Const <$> const')
     <|> try functionCallExpr
+    <|> try arithmeticExpression
     <|> try (IdVar <$> identifier')
     <|> try (Lit <$> stringLiteral')
 
