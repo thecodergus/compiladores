@@ -21,6 +21,20 @@ block' = braces' $ do
 block'' :: Parsec String () Bloco
 block'' = braces' $ many (whiteSpace' *> command <* whiteSpace')
 
+-- Função auxiliar para analisar bloco com declarações de variaveis e comandos de forma mais maleavel
+block''' :: Parsec String () ([Var], Bloco)
+block''' = braces' $ do
+  let varOrCmds = 
+        try (Left . Left <$> variableDeclarations)
+        <|> try (Right . Right <$> command)
+
+  declarations <- manyTill varOrCmds (lookAhead eof)
+  let (um, dois) = partitionEithers declarations
+  let (um', _) = partitionEithers um
+  let (dois', _) = partitionEithers dois
+
+  return (concat um', concat dois')
+
 -- Função auxiliar para analisar listas de comandos
 commandList :: Parsec String () [Comando]
 commandList = many (whiteSpace' *> command <* whiteSpace')
