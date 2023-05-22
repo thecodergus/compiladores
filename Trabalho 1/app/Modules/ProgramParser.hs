@@ -40,8 +40,14 @@ programParser = do
       eof -- verifica se chegou ao fim do arquivo
 
       let mainFunction = find (\(id, _, _, _) -> id == "main") funsWithParams' -- procura pela função main
-      let mainFunctionCommands = case mainFunction of -- verifica se a função main foi encontrada
-            Just (_, _, _, cmds) -> cmds -- retorna os comandos da função main
-            Nothing -> [] -- retorna uma lista vazia
+      let funsWithParams'' = filter (\(id, parameters, vars, commands) -> id /= "main") funsWithParams' -- procura por funções que não sejam a main
 
-      return $ Prog functionDeclarations funsWithParams' variableDeclarations' mainFunctionCommands -- retorna o programa
+      case mainFunction of
+            Just (_, _, vars, cmds) -> do
+                  
+                  let mainFunctionCommands = cmds -- pega os comandos da função main
+                  let mainFunctionVariables = vars -- pega as variáveis da função main
+
+                  return $ Prog functionDeclarations variableDeclarations' funsWithParams'' mainFunctionVariables mainFunctionCommands -- retorna o programa
+
+            Nothing -> fail "O programa precisa ter uma função principal Main para ser o bloco principal da função programa." -- lança um erro se a função main não for encontrada
