@@ -74,7 +74,7 @@ atribCommand = do
 readCommand :: Parsec String () Comando
 readCommand = do
   reserved' "read"
-  var <- identifier'
+  var <- parens' identifier'
   semi'
   return (Leitura var)
 
