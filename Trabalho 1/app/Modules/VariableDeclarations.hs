@@ -6,6 +6,7 @@ import Types ( Var(..), Type(..), Expr (Const, IdVar, Lit, Chamada), TCons (CInt
 import Text.Parsec.Token ( GenTokenParser(stringLiteral) )
 import Text.Parsec.Combinator (sepBy)
 import Text.Parsec.Char (char)
+import ArithmeticExpressions (arithmeticExpression)
 
 -- Função principal para analisar declarações de variáveis
 variableDeclarations :: Parsec String () [Var]

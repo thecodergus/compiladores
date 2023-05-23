@@ -24,7 +24,8 @@ block'' = braces' $ many (whiteSpace' *> command <* whiteSpace')
 
 -- Função auxiliar para analisar bloco com declarações de variaveis e comandos de forma mais maleavel
 block''' :: Parsec String () ([Var], Bloco)
-block''' = braces' $ do
+block''' = do
+  braces' whiteSpace'
   let varOrCmds = 
         try (Left . Left <$> variableDeclarations)
         <|> try (Right . Right <$> command)
