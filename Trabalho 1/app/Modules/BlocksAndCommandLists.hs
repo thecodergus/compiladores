@@ -2,9 +2,10 @@ module BlocksAndCommandLists where
 
 import Commands (command)
 import Lexer (braces', whiteSpace')
-import Text.Parsec (Parsec, many, try, (<|>), option)
+import Text.Parsec (Parsec, many, try, (<|>), option, manyTill, lookAhead, eof)
 import Types (Bloco, Comando, Var)
 import VariableDeclarations (variableDeclarations)
+import Data.Either (partitionEithers)
 
 -- Função principal para analisar blocos
 block :: Parsec String () Bloco
