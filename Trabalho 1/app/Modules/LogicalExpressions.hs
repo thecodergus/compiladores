@@ -1,4 +1,7 @@
 module LogicalExpressions where
+{-
+O módulo LogicalExpressions é usado para analisar expressões lógicas, incluindo operações lógicas como AND(&&), OR(||) e NOT(!).
+-}
 
 import Lexer (parens', reservedOp', whiteSpace')
 import RelationalExpressions (relationalExpression)

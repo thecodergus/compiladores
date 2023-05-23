@@ -1,4 +1,9 @@
 module Lexer where
+{-
+Lexer para uma linguagem de programação usando a biblioteca Parsec.
+O lexer é a primeira fase de qualquer compilador ou interpretador, responsável por
+  transformar o texto do código fonte em uma sequência de tokens, as unidades básicas de uma linguagem.
+-}
 
 import Text.Parsec (Parsec, alphaNum, char, letter, (<|>), notFollowedBy, try, choice)
 import Text.Parsec.Language (emptyDef)

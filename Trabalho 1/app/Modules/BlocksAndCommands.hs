@@ -1,4 +1,10 @@
 module BlocksAndCommands where
+{-
+Módulo BlocksAndCommands para analisar blocos de código e comandos em uma linguagem de programação usando a biblioteca Parsec.
+As funções definidas aqui são usadas para analisar blocos de código que podem aparecer no código fonte, assim como comandos individuais.
+Um bloco é uma sequência de comandos, possivelmente incluindo declarações de variáveis (neste projeto decidir separar ambos).
+Os comandos que podem ser analisados incluem comandos de atribuição, comandos condicionais if-else, comandos de loop while, comandos de gravação(read) em variavel, comandos de impressão, comandos de retorno e chamadas de função.
+-}
 
 import ArithmeticExpressions (arithmeticExpression)
 import Lexer (braces', commaSep', identifier', parens', reserved', reservedOp', semi', stringLiteral', whiteSpace')

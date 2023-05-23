@@ -1,4 +1,7 @@
 module VariableDeclarations where
+{-
+O módulo VariableDeclarations é usado para analisar declarações de variáveis e expressões de uma linguagem de programação usando a biblioteca Parsec.
+-}
 
 import Lexer (commaSep', identifier', reserved', semi', whiteSpace', parens', stringLiteral', const', type')
 import Text.Parsec (Parsec, many, try, (<|>))

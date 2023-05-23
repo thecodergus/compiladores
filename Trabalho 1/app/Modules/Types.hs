@@ -1,4 +1,7 @@
 module Types where
+{-
+O módulo Types é usado para definir os tipos de dados que serão usados na representação interna de uma linguagem de programação.
+-}
 
 -- Tipo para representar identificadores.
 type Id = String

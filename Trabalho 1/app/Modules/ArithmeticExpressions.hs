@@ -1,4 +1,9 @@
 module ArithmeticExpressions where
+{-
+Módulo ArithmeticExpressions para analisar expressões aritméticas em uma linguagem de programação usando a biblioteca Parsec.
+As funções definidas aqui são usadas para analisar as expressões aritméticas(matematicas) que podem aparecer no código fonte.
+Expressões aritméticas são construídas a partir de termos, fatores e operadores.
+-}
 
 import Lexer (float', identifier', integer', parens', reservedOp', whiteSpace')
 import Text.Parsec (Parsec, chainl1, try, (<|>))

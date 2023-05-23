@@ -1,4 +1,8 @@
 module FunctionsAndParameters where
+{-
+Módulo FunctionsAndParameters para analisar definições de funções e seus parâmetros usando a biblioteca Parsec.
+As funções aqui definidas são usadas para analisar definições de funções e declarações de parâmetros que podem aparecer em um código-fonte.
+-}
 
 import Lexer (braces', identifier', parens', reserved', semi', whiteSpace', commaSep', type')
 import Text.Parsec (Parsec, anyChar, char, many, sepBy, try, (<|>), choice, option, optional)

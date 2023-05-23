@@ -1,4 +1,8 @@
 module RelationalExpressions where
+{-
+O módulo RelationalExpressions é usado para analisar expressões relacionais em uma dada linguagem de programação usando a biblioteca Parsec.
+Expressões relacionais incluem operações como igual a(==), diferente de(/=), menor que(<), maior que(>), menor ou igual a(<=), e maior ou igual a(>=).
+-}
 
 import ArithmeticExpressions (arithmeticExpression)
 import Lexer (reservedOp', whiteSpace', parens', reserved', identifier')

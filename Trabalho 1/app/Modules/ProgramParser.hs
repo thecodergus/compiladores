@@ -1,4 +1,7 @@
 module ProgramParser where
+{-
+Este módulo fornece a função Programa para analisar programas na linguagem definida pelo professor Cristiano Vasconcellosna disciplina de Compiladores em 2023-1, na UDESC.
+-}
 
 import FunctionsAndParameters (parseFunctionsWithParamsAndVars, functionDefinition)
 import Lexer (whiteSpace', reserved', parens')
