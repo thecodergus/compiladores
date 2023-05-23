@@ -1,4 +1,4 @@
-float maior (float a, float b)
+double maior (double a, double b)
 {
   int m;
   
@@ -21,7 +21,7 @@ int fat (int n)
 }
    
 
-void imprimir(string s, float r)
+void imprimir(string s, double r)
 {
   int s;
   
@@ -32,7 +32,7 @@ void imprimir(string s, float r)
 
 void main(){
   int x, num;
-  float a;
+  double a;
   int x;
   
   print("Numero:");
