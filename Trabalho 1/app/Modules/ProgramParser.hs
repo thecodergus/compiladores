@@ -34,7 +34,7 @@ programParser = do
   let varOrFun =
         -- analisa declarações de variáveis ou funções, e definições de funções
         try (Left . Left <$> variableDeclarations) -- analisa declarações de variáveis
-          <|> (Right . Right <$> command) -- analisa comandos
+          <|> try (Right . Right <$> command) -- analisa comandos
           <|> try (Left . Right <$> functionDefinition) -- analisa declarações de funções
           <|> try (Right . Left <$> parseFunctionsWithParamsAndVars) -- analisa definições de funções
   
@@ -59,5 +59,5 @@ programParser = do
       let mainFunctionVariables = vars -- pega as variáveis da função main
 
       return $ Prog functionDeclarations variableDeclarations' funsWithParams' mainFunctionVariables mainFunctionCommands -- retorna o programa
-      
+
     Nothing -> fail "O programa não possui uma função Main definida. A função Main é obrigatória para a execução do programa." -- lança um erro se a função main não for encontrada
