@@ -57,5 +57,7 @@ programParser = do
     Just (_, _, vars, cmds) -> do
       let mainFunctionCommands = cmds -- pega os comandos da função main
       let mainFunctionVariables = vars -- pega as variáveis da função main
+
       return $ Prog functionDeclarations variableDeclarations' funsWithParams' mainFunctionVariables mainFunctionCommands -- retorna o programa
+      
     Nothing -> fail "O programa não possui uma função Main definida. A função Main é obrigatória para a execução do programa." -- lança um erro se a função main não for encontrada
