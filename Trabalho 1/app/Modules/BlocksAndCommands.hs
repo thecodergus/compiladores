@@ -32,6 +32,13 @@ block' = braces' $ do
 block'' :: Parsec String () Bloco
 block'' = braces' $ many (whiteSpace' *> command <* whiteSpace')
 
+-- Função principal para analisar blocos
+block''' :: Bool -> Parsec String () ([Var], Bloco)
+block''' parseVars = braces' $ do
+  vars <- if parseVars then option [] (many (try variableDeclarations)) else return []
+  cmds <- many (whiteSpace' *> command <* whiteSpace')
+  return (concat vars, cmds)
+
 -- Função auxiliar para analisar listas de comandos
 commandList :: Parsec String () [Comando]
 commandList = many (whiteSpace' *> command <* whiteSpace')
@@ -50,14 +57,18 @@ command =
       try functionCall
     ]
 
+-- Função auxiliar para analisar condições
+condition :: Parsec String () ExprL
+condition =
+  try (parens' logicalExpression)
+    <|> try (parens' $ Rel <$> relationalExpression)
+    <|> try (Rel <$> relationalExpression)
+
 -- Função auxiliar para analisar comandos If
 ifCommand :: Parsec String () Comando
 ifCommand = do
   reserved' "if"
-  cond <-
-    try (parens' logicalExpression)
-      <|> try (parens' $ Rel <$> relationalExpression)
-      <|> try (Rel <$> relationalExpression)
+  cond <- condition
 
   trueBlock <- commandBlock
 
@@ -72,10 +83,7 @@ ifCommand = do
 whileCommand :: Parsec String () Comando
 whileCommand = do
   reserved' "while"
-  cond <-
-    try (parens' logicalExpression)
-      <|> try (parens' $ Rel <$> relationalExpression)
-      <|> try (Rel <$> relationalExpression)
+  cond <- condition
 
   While cond <$> commandBlock
 
