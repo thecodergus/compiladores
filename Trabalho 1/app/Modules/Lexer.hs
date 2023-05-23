@@ -85,8 +85,8 @@ const' = do
 type' :: Parsec String () Type
 type' =
   choice
-    [ try (reserved' "int" >> return TInt),
-      try ((reserved' "double" <|> reserved' "float") >> return TDouble),
-      try (reserved' "string" >> return TString),
+    [ reserved' "int" >> return TInt,
+      (reserved' "double" <|> reserved' "float") >> return TDouble,
+      reserved' "string" >> return TString,
       reserved' "void" >> return TVoid
     ]
