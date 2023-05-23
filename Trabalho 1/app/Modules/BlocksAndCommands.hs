@@ -1,14 +1,34 @@
-module Commands where
+module BlocksAndCommands where
 
 import ArithmeticExpressions (arithmeticExpression)
 import Lexer (braces', commaSep', identifier', parens', reserved', reservedOp', semi', stringLiteral', whiteSpace')
 import LogicalExpressions (logicalExpression, logicalExpression')
 import RelationalExpressions (relationalExpression)
-import Text.Parsec (Parsec, choice, many, many1, optionMaybe, optional, try, (<|>), sepBy)
-import Types (Bloco, Comando (..), Expr (Chamada), ExprL (..), ExprR, Id)
+import Text.Parsec (Parsec, choice, many, many1, optionMaybe, optional, try, (<|>), sepBy, option)
+import Types (Bloco, Comando (..), Expr (Chamada), ExprL (..), ExprR, Id, Var)
 import Data.Maybe (fromMaybe)
-import VariableDeclarations (expression, functionCall')
+import VariableDeclarations (expression, functionCall', variableDeclarations)
 import Text.Parsec.Char (char)
+
+
+-- Função principal para analisar blocos
+block :: Parsec String () Bloco
+block = braces' commandList
+
+-- Função auxiliar para analisar blocos com declarações de variáveis
+block' :: Parsec String () ([Var], Bloco)
+block' = braces' $ do
+  vars <- option [] (many (try variableDeclarations)) -- tenta analisar declarações de variáveis
+  cmds <- try commandList
+  return (concat vars, cmds)
+
+-- Função auxiliar para analisar blocos com declarações de variáveis
+block'' :: Parsec String () Bloco
+block'' = braces' $ many (whiteSpace' *> command <* whiteSpace')
+
+-- Função auxiliar para analisar listas de comandos
+commandList :: Parsec String () [Comando]
+commandList = many (whiteSpace' *> command <* whiteSpace')
 
 -- Função principal para analisar comandos
 command :: Parsec String () Comando
@@ -101,7 +121,3 @@ functionCall = do
   (funcName, params) <- functionCall'
   semi'
   return (Proc funcName params)
-
--- Função para analisar um bloco de comandos
-block :: Parsec String () Bloco
-block = many1 command

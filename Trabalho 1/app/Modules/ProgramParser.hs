@@ -1,6 +1,5 @@
 module ProgramParser where
 
-import BlocksAndCommandLists (block)
 import FunctionsAndParameters (parseFunctionsWithParamsAndVars, functionDefinition)
 import Lexer (whiteSpace', reserved', parens')
 import Text.Parsec (Parsec, eof, many, try, (<|>), choice, manyTill, lookAhead, option)
@@ -10,7 +9,7 @@ import Test.QuickCheck (Fun(Fun))
 import VariableDeclarations (variableDeclarations)
 import Data.Either (partitionEithers)
 import Data.Maybe (listToMaybe)
-import Commands (command)
+import BlocksAndCommands (command, block)
 import Data.Foldable (find)
 
 -- Função principal para analisar um programa completo

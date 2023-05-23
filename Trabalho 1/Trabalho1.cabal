@@ -26,8 +26,7 @@ executable Trabalho1
   main-is:          Main.hs
   other-modules:
     ArithmeticExpressions
-    BlocksAndCommandLists
-    Commands
+    BlocksAndCommands
     FunctionsAndParameters
     Lexer
     LogicalExpressions

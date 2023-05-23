@@ -3,8 +3,8 @@ module FunctionsAndParameters where
 import Lexer (braces', identifier', parens', reserved', semi', whiteSpace', commaSep', type')
 import Text.Parsec (Parsec, anyChar, char, many, sepBy, try, (<|>), choice, option, optional)
 import Types (Funcao (..), Type (..), Var (..), Id, Bloco, ExprL ((:|:)), Expr)
-import BlocksAndCommandLists (block, block')
 import VariableDeclarations ( expression )
+import BlocksAndCommands (block')
 
 -- Função principal para analisar a definição de funções
 functionDefinition :: Parsec String () Funcao
