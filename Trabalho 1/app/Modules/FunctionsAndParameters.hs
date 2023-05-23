@@ -21,7 +21,7 @@ returnType :: Parsec String () Type
 returnType =
   choice
     [ try (reserved' "int" >> return TInt),
-      try (reserved' "double" >> return TDouble),
+      try ((reserved' "double" <|> reserved' "float") >> return TDouble),
       try (reserved' "string" >> return TString),
       reserved' "void" >> return TVoid
     ]
