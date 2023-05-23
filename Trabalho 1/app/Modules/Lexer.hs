@@ -1,10 +1,10 @@
 module Lexer where
 
-import Text.Parsec (Parsec, alphaNum, char, letter, (<|>), notFollowedBy, try)
+import Text.Parsec (Parsec, alphaNum, char, letter, (<|>), notFollowedBy, try, choice)
 import Text.Parsec.Language (emptyDef)
 import Text.Parsec.Token (LanguageDef (..), TokenParser, braces, commaSep, float, identifier, integer, makeTokenParser, parens, reserved, reservedOp, semi, stringLiteral, symbol, whiteSpace)
 import Text.ParserCombinators.Parsec.Language (GenLanguageDef (..))
-import Types (Expr(IdVar), Id, TCons (CDouble, CInt))
+import Types (Expr(IdVar), Id, TCons (CDouble, CInt), Type (TInt, TString, TDouble, TVoid))
 
 -- Definição da linguagem
 languageDef :: LanguageDef ()
@@ -79,3 +79,14 @@ const' = do
   return $ case val of
     Left i -> CInt i
     Right d -> CDouble d
+
+
+-- Função auxiliar para analisar o tipo de uma função ou variavel
+type' :: Parsec String () Type
+type' =
+  choice
+    [ try (reserved' "int" >> return TInt),
+      try ((reserved' "double" <|> reserved' "float") >> return TDouble),
+      try (reserved' "string" >> return TString),
+      reserved' "void" >> return TVoid
+    ]

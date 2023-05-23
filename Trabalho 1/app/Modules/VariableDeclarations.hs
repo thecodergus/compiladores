@@ -1,6 +1,6 @@
 module VariableDeclarations where
 
-import Lexer (commaSep', identifier', reserved', semi', whiteSpace', parens', stringLiteral', const')
+import Lexer (commaSep', identifier', reserved', semi', whiteSpace', parens', stringLiteral', const', type')
 import Text.Parsec (Parsec, many, try, (<|>))
 import Types ( Var(..), Type(..), Expr (Const, IdVar, Lit, Chamada), TCons (CInt), Id ) 
 import Text.Parsec.Token ( GenTokenParser(stringLiteral) )
@@ -11,7 +11,7 @@ import ArithmeticExpressions (arithmeticExpression)
 -- Função principal para analisar declarações de variáveis
 variableDeclarations :: Parsec String () [Var]
 variableDeclarations = do
-  t <- varType
+  t <- type'
   whiteSpace'
   varList <- commaSep' identifier'
   semi'
@@ -20,14 +20,6 @@ variableDeclarations = do
 -- Função auxiliar para criar uma lista de variáveis a partir de um tipo e uma lista de identificadores
 createVariables :: Type -> [String] -> [Var]
 createVariables t ids = [i :#: t | i <- ids]
-
--- Função auxiliar para analisar o tipo de uma variável
-varType :: Parsec String () Type
-varType =
-  try (reserved' "int" >> return TInt)
-    <|> try ((reserved' "double" <|> reserved' "float") >> return TDouble)
-    <|> try (reserved' "string" >> return TString)
-    <|> (reserved' "void" >> return TVoid)
 
 -- Função principal para analisar expressões
 expression :: Parsec String () Expr

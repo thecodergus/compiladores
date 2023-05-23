@@ -1,6 +1,6 @@
 module FunctionsAndParameters where
 
-import Lexer (braces', identifier', parens', reserved', semi', whiteSpace', commaSep')
+import Lexer (braces', identifier', parens', reserved', semi', whiteSpace', commaSep', type')
 import Text.Parsec (Parsec, anyChar, char, many, sepBy, try, (<|>), choice, option, optional)
 import Types (Funcao (..), Type (..), Var (..), Id, Bloco, ExprL ((:|:)), Expr)
 import BlocksAndCommandLists (block, block')
@@ -9,22 +9,12 @@ import VariableDeclarations ( expression )
 -- Função principal para analisar a definição de funções
 functionDefinition :: Parsec String () Funcao
 functionDefinition = do
-  retType <- returnType
+  retType <- type'
   whiteSpace'
   funcName <- identifier'
   params <- parens' parameters
   semi'
   return (funcName :->: (params, retType))
-
--- Função auxiliar para analisar o tipo de retorno de uma função
-returnType :: Parsec String () Type
-returnType =
-  choice
-    [ try (reserved' "int" >> return TInt),
-      try ((reserved' "double" <|> reserved' "float") >> return TDouble),
-      try (reserved' "string" >> return TString),
-      reserved' "void" >> return TVoid
-    ]
 
 
 -- Função auxiliar para analisar os parâmetros de uma função
@@ -34,7 +24,7 @@ parameters = parameter `sepBy` (char ',' >> whiteSpace')
 -- Função auxiliar para analisar um único parâmetro
 parameter :: Parsec String () Var
 parameter = do
-  t <- returnType
+  t <- type'
   whiteSpace'
   paramName <- identifier'
   return (paramName :#: t)
@@ -43,7 +33,7 @@ parameter = do
 -- Função auxiliar para analisar a definição de funções
 functionHeader :: Parsec String () (Id, [Var])
 functionHeader = do
-  retType <- returnType
+  retType <- type'
   whiteSpace'
   funcName <- identifier'
   params <- parens' parameters
