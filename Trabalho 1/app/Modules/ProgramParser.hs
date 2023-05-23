@@ -16,6 +16,14 @@ import BlocksAndCommands (command, block)
 import Data.Foldable (find)
 
 -- Função auxiliar para análise comum
+{-
+Função 'parseCommon' recebe uma função de análise 'p' e retorna outra função de análise.
+A função de análise retornada vai aplicar a função de análise 'p' várias vezes até chegar ao fim do arquivo.
+'manyTill p (lookAhead eof)' significa "aplique a função de análise 'p' repetidamente até que o fim do arquivo seja avistado".
+'lookAhead eof' é uma função de análise que tem sucesso se o fim do arquivo foi alcançado, mas sem consumir nenhum caractere.
+Isso significa que 'parseCommon p' pode ser usado para analisar várias instâncias de algo até o fim do arquivo, sem consumir o fim do arquivo.
+Por exemplo, 'parseCommon variableDeclarations' irá analisar várias declarações de variáveis até o fim do arquivo.
+-}
 parseCommon :: Parsec String () a -> Parsec String () [a]
 parseCommon p = manyTill p (lookAhead eof)
 
