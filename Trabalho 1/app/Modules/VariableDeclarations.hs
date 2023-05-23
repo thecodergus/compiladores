@@ -25,7 +25,7 @@ createVariables t ids = [i :#: t | i <- ids]
 varType :: Parsec String () Type
 varType =
   try (reserved' "int" >> return TInt)
-    <|> try (reserved' "double" >> return TDouble)
+    <|> try ((reserved' "double" <|> reserved' "float") >> return TDouble)
     <|> try (reserved' "string" >> return TString)
     <|> (reserved' "void" >> return TVoid)
 

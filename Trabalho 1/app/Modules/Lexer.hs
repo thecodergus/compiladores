@@ -15,7 +15,7 @@ languageDef =
       commentLine = "//",
       identStart = letter <|> char '_',
       identLetter = alphaNum <|> char '_',
-      reservedNames = ["int", "double", "string", "void", "if", "else", "while", "return", "print", "read"],
+      reservedNames = ["int", "double", "float", "string", "void", "if", "else", "while", "return", "print", "read"],
       reservedOpNames = ["+", "-", "*", "/", "=", "<", ">", "<=", ">=", "==", "/=", "&&", "||", "!"],
       caseSensitive = True
     }
