@@ -16,31 +16,15 @@ import Data.Maybe (fromMaybe)
 import VariableDeclarations (expression, functionCall', variableDeclarations)
 import Text.Parsec.Char (char)
 
-
--- Função principal para analisar blocos
-block :: Parsec String () Bloco
-block = braces' commandList
-
--- Função auxiliar para analisar blocos com declarações de variáveis
-block' :: Parsec String () ([Var], Bloco)
-block' = braces' $ do
+-- Função pricipal para analisar blocos com declarações de variáveis
+block :: Parsec String () ([Var], Bloco)
+block = braces' $ do
   vars <- option [] (many (try variableDeclarations)) -- tenta analisar declarações de variáveis
   cmds <- try commandList
   return (concat vars, cmds)
 
--- Função auxiliar para analisar blocos com declarações de variáveis
-block'' :: Parsec String () Bloco
-block'' = braces' $ many (whiteSpace' *> command <* whiteSpace')
-
--- Função principal para analisar blocos
-block''' :: Bool -> Parsec String () ([Var], Bloco)
-block''' parseVars = braces' $ do
-  vars <- if parseVars then option [] (many (try variableDeclarations)) else return []
-  cmds <- many (whiteSpace' *> command <* whiteSpace')
-  return (concat vars, cmds)
-
 -- Função auxiliar para analisar listas de comandos
-commandList :: Parsec String () [Comando]
+commandList :: Parsec String () Bloco
 commandList = many (whiteSpace' *> command <* whiteSpace')
 
 -- Função principal para analisar comandos
@@ -90,7 +74,7 @@ whileCommand = do
 -- Função auxiliar para analisar blocos de comandos
 commandBlock :: Parsec String () [Comando]
 commandBlock =
-  try (braces' block)
+  try (braces' commandList)
     <|> try (braces' $ return [])
     <|> try (braces' $ many1 command)
     <|> try (braces' $ many command)

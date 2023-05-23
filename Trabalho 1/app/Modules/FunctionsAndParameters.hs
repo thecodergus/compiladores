@@ -8,7 +8,7 @@ import Lexer (braces', identifier', parens', reserved', semi', whiteSpace', comm
 import Text.Parsec (Parsec, anyChar, char, many, sepBy, try, (<|>), choice, option, optional)
 import Types (Funcao (..), Type (..), Var (..), Id, Bloco, ExprL ((:|:)), Expr)
 import VariableDeclarations ( expression )
-import BlocksAndCommands (block')
+import BlocksAndCommands (block)
 
 -- Função principal para analisar a definição de funções
 functionDefinition :: Parsec String () Funcao
@@ -49,7 +49,7 @@ parseFunctionsWithParamsAndVars = do
   many $ do
     whiteSpace'
     (funId, params) <- try functionHeader
-    (vars, funBlock) <- try block'
+    (vars, funBlock) <- try block
     return (funId, params, vars, funBlock)
 
 
@@ -58,5 +58,5 @@ parseFunctionsWithParamsAndVars' :: Parsec String () (Id, [Var], [Var], Bloco)
 parseFunctionsWithParamsAndVars' = do
     whiteSpace'
     (funId, params) <- functionHeader
-    (vars, funBlock) <- block'
+    (vars, funBlock) <- block
     return (funId, params, vars, funBlock)
