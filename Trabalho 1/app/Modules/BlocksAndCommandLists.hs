@@ -14,9 +14,15 @@ block = braces' commandList
 -- Função auxiliar para analisar blocos com declarações de variáveis
 block' :: Parsec String () ([Var], Bloco)
 block' = braces' $ do
-  vars <- option [] (many (try variableDeclarations)) -- tenta analisar declarações de variáveis
-  cmds <- try commandList
-  return (concat vars, cmds)
+
+  let varOrCmd = try (Left <$> variableDeclarations) <|> (Right <$> command)
+
+  declsAndCmds <- many varOrCmd
+
+  let (varDecls, cmds) = partitionEithers declsAndCmds
+  
+  return (concat varDecls, cmds)
+
 
 -- Função auxiliar para analisar blocos com declarações de variáveis
 block'' :: Parsec String () Bloco
