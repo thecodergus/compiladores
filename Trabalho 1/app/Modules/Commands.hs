@@ -14,9 +14,10 @@ import Text.Parsec.Char (char)
 command :: Parsec String () Comando
 command =
   choice
-    [ try ifCommand,
-      try whileCommand,
+    [ 
       try atribCommand,
+      try ifCommand,
+      try whileCommand,
       try readCommand,
       try printCommand,
       try returnCommand,
