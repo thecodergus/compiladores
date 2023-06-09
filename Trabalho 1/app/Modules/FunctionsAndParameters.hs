@@ -35,29 +35,20 @@ parameter = do
 
 
 -- Função auxiliar para analisar a definição de funções
-functionHeader :: Parsec String () (Id, [Var])
+functionHeader :: Parsec String () (Id, [Var], Type)
 functionHeader = do
   retType <- type'
   whiteSpace'
   funcName <- identifier'
   params <- parens' parameters
-  return (funcName, params)
+  return (funcName, params, retType)
 
 -- Função auxiliar para analisar a definição de funções
-parseFunctionsWithParamsAndVars :: Parsec String () [FuncaoBloco]
-parseFunctionsWithParamsAndVars = do
+funtions :: Parsec String () [(Funcao, FuncaoBloco)]
+funtions = do
   many $ do
     whiteSpace'
-    (funId, params) <- try functionHeader
+    (funId, params, retType) <- try functionHeader
     (vars, funBlock) <- try block
-
-    return (funId, params ++ vars, funBlock)
-
-
--- Função auxiliar para analisar a definição de funções
-parseFunctionsWithParamsAndVars' :: Parsec String () FuncaoBloco
-parseFunctionsWithParamsAndVars' = do
-    whiteSpace'
-    (funId, params) <- functionHeader
-    (vars, funBlock) <- block
-    return (funId, params ++ vars, funBlock)
+    
+    return (funId :->: (params, retType), (funId, params ++ vars, funBlock))
