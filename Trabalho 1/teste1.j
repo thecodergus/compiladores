@@ -1,8 +1,3 @@
-double maior (double a, double b);
-int fat (int n);
-void imprimir(string s, double r);
-void main();
-
 double maior (double a, double b)
 {
   int m;
