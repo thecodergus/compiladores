@@ -25,6 +25,8 @@ extra-source-files: CHANGELOG.md
 executable Trabalho2
   main-is:          Main.hs
   other-modules:
+    Semantico.Errors
+    Semantico.TypeChecking
     Sintatico.ArithmeticExpressions
     Sintatico.BlocksAndCommands
     Sintatico.FunctionsAndParameters
