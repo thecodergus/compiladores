@@ -6,7 +6,7 @@ As funções aqui definidas são usadas para analisar definições de funções 
 
 import Lexer (braces', identifier', parens', reserved', semi', whiteSpace', commaSep', type')
 import Text.Parsec (Parsec, anyChar, char, many, sepBy, try, (<|>), choice, option, optional)
-import Types (Funcao (..), Type (..), Var (..), Id, Bloco, ExprL ((:|:)), Expr)
+import Types (Funcao (..), Type (..), Var (..), Id, Bloco, ExprL ((:|:)), Expr, FuncaoBloco)
 import VariableDeclarations ( expression )
 import BlocksAndCommands (block)
 
@@ -44,19 +44,20 @@ functionHeader = do
   return (funcName, params)
 
 -- Função auxiliar para analisar a definição de funções
-parseFunctionsWithParamsAndVars :: Parsec String () [(Id, [Var], [Var], Bloco)]
+parseFunctionsWithParamsAndVars :: Parsec String () [FuncaoBloco]
 parseFunctionsWithParamsAndVars = do
   many $ do
     whiteSpace'
     (funId, params) <- try functionHeader
     (vars, funBlock) <- try block
-    return (funId, params, vars, funBlock)
+
+    return (funId, params ++ vars, funBlock)
 
 
 -- Função auxiliar para analisar a definição de funções
-parseFunctionsWithParamsAndVars' :: Parsec String () (Id, [Var], [Var], Bloco)
+parseFunctionsWithParamsAndVars' :: Parsec String () FuncaoBloco
 parseFunctionsWithParamsAndVars' = do
     whiteSpace'
     (funId, params) <- functionHeader
     (vars, funBlock) <- block
-    return (funId, params, vars, funBlock)
+    return (funId, params ++ vars, funBlock)
