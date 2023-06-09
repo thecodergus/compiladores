@@ -1,0 +1,49 @@
+cabal-version:      2.4
+name:               Trabalho2
+version:            0.1.0.0
+
+-- A short (one-line) description of the package.
+-- synopsis:
+
+-- A longer description of the package.
+-- description:
+
+-- A URL where users can report bugs.
+-- bug-reports:
+
+-- The license under which the package is released.
+-- license:
+author:             Gustavo Michels de Camargo
+maintainer:         guga.power@hotmail.com
+
+-- A copyright notice.
+-- copyright:
+-- category:
+build-type:         Simple
+extra-source-files: CHANGELOG.md
+
+executable Trabalho2
+  main-is:          Main.hs
+  other-modules:
+    Sintatico.ArithmeticExpressions
+    Sintatico.BlocksAndCommands
+    Sintatico.FunctionsAndParameters
+    Sintatico.Lexer
+    Sintatico.LogicalExpressions
+    Sintatico.ProgramParser
+    Sintatico.RelationalExpressions
+    Sintatico.Types
+    Sintatico.VariableDeclarations
+
+  -- Modules included in this executable, other than Main.
+  -- other-modules:
+
+  -- LANGUAGE extensions used by modules in this package.
+  -- other-extensions:
+  build-depends:
+    , base    ^>=4.16.4.0
+    , parsec  >=3.1.14.0
+
+  hs-source-dirs:   app app/Modules app/Modules/Sintatico
+  default-language: Haskell2010
+  ghc-options:      -Wno-tabs
