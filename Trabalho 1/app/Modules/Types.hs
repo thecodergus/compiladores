@@ -60,7 +60,7 @@ type FuncaoBloco = (Id, [Var], Bloco) -- Representação de funções com bloco 
 
 -- Representação do programa na linguagem (lista de funções e bloco principal).
 -- Modifiquei para incluir a lista de variáveis locais de cada função
-data Programa = Prog [Funcao] [Var] [FuncaoBloco] [Var] Bloco deriving (Eq, Show)
+data Programa = Prog [Funcao] [FuncaoBloco] [Var] Bloco deriving (Eq, Show)
 
 -- Representação de um bloco de comandos na linguagem.
 type Bloco = [Comando]
