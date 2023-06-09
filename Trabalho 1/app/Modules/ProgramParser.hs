@@ -19,9 +19,9 @@ programParser :: Parsec String () Programa
 programParser = do
     whiteSpace' -- ignora espaços em branco
     
-    funs <- funtions -- busca pelo retorno de parseFunctionsWithParamsAndVars
+    funs <- funtions -- analisa as definições de funções
 
-    let (funsDefinitios, funsBlocks) = unzip funs 
+    let (funsDefinitios, funsBlocks) = unzip funs -- separa as definições de funções dos blocos de comandos
 
     whiteSpace' -- ignora espaços em branco
     eof -- verifica se chegou ao fim do arquivo
@@ -31,6 +31,6 @@ programParser = do
           Just (_, vars, cmds) -> (vars, cmds) -- retorna os comandos da função main
           Nothing -> ([], []) -- retorna uma lista vazia
 
-    -- Retorna o programa contendo apenas as definições de funções.
-    -- Note que as listas de FuncaoDefinicao e Var estão vazias.
+
+    -- retorna o programa
     return $ Prog funsDefinitios funsBlocks varsMainFunction mainFunctionCommands
