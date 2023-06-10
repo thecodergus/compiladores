@@ -4,7 +4,7 @@ import Sintatico.Types (Var ((:#:)), Bloco, Comando (Atrib), Id, Expr (Chamada),
 import Semantico.ErrosSemantico (ErroSemantico (IncompatibilidadeTipoAtribuicao, VariavelNaoDeclarada))
 import Semantico.AvisosSemantico (AvisoSemantico (CoercaoTipo, ConversaoDoubleParaInt))
 import Data.Foldable (find)
-import Semantico.AnalisadorVariaveis (inferirTipo)
+import Semantico.AnalisadorVariaveis (analisarAtribuicao, inferirTipo)
 
 -- import 
 
