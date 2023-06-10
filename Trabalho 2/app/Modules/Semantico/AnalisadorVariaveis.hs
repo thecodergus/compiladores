@@ -43,8 +43,8 @@ encontrarVariavel vars id = find (\(vid :#: _) -> vid == id) vars
 gerarErrosAvisosAtribuicao :: Id -> Type -> Type -> ([ErroSemantico], [AvisoSemantico])
 gerarErrosAvisosAtribuicao varId varType exprType =
   case (varType, exprType) of
-    (TDouble, TInt) -> ([], [CoercaoTipo TInt TDouble])
-    (TInt, TDouble) -> ([IncompatibilidadeTipoAtribuicao varId TInt TDouble], [ConversaoDoubleParaInt])
+    (TDouble, TInt) -> ([IncompatibilidadeTipoAtribuicao varId TDouble TInt], [CoercaoTipo TInt TDouble, ConversaoIntParaDouble])
+    (TInt, TDouble) -> ([IncompatibilidadeTipoAtribuicao varId TInt TDouble], [CoercaoTipo TDouble TInt, ConversaoDoubleParaInt])
     _ -> if varType == exprType then ([], []) else ([IncompatibilidadeTipoAtribuicao varId varType exprType], [])
 
 

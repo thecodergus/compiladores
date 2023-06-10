@@ -6,4 +6,5 @@ import Sintatico.Types ( Type  )
 data AvisoSemantico
   = CoercaoTipo {tipoOrigem :: Type, tipoDestino :: Type}
   | ConversaoDoubleParaInt
+  | ConversaoIntParaDouble
   deriving (Eq, Show)
