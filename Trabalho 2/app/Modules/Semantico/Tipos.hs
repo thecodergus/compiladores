@@ -1,4 +1,4 @@
-module Semantico.Errors where
+module Semantico.Tipos where
 
 import Sintatico.Types ( Type, Id,  )
 
