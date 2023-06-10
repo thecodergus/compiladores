@@ -13,4 +13,8 @@ data ErroSemantico
   | VariavelNaoDeclarada {nomeVariavel :: Id}
   | DeclaracaoMultiplaVariavel {nomeVariavel :: Id}
   | DeclaracaoMultiplaFuncao {nomeFuncao :: Id}
+  | NumeroParametrosIncorreto {nomeFuncao :: Id}
+  | TiposParametrosIncompativel {nomeFuncao :: Id}
+  | ChamadaFuncaoNaoDeclarada {nomeFuncao :: Id}
+  | FuncaoMultiplamenteDeclarada {nomeFuncao :: Id}
   deriving (Eq, Show)
