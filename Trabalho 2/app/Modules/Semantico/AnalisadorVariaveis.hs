@@ -6,17 +6,22 @@ import Semantico.ErrosSemantico (ErroSemantico (..))
 import Sintatico.Types (Bloco, Comando (..), Id, Type (..), Var (..), Expr (..), TCons (CDouble, CInt))
 import Data.Foldable (find)
 
--- Função que analisa o bloco de comandos em busca de erros relacionados às variáveis
+-- | Função que analisa o bloco de comandos em busca de erros relacionados às variáveis.
+-- Recebe uma lista de variáveis e um bloco de comandos, e retorna uma lista de erros semânticos e avisos.
 analisarVariaveis :: [Var] -> Bloco -> ([ErroSemantico], [AvisoSemantico])
-analisarVariaveis vars = foldl analisarComando ([], [])
+analisarVariaveis vars = foldl (analisarComando vars) ([], [])
   where
-    analisarComando (erros, avisos) comando =
-      case comando of
-        -- Analisar comando de atribuição
-        Atrib id expr ->
-          let (errs, avs) = analisarAtribuicao vars id expr
-           in (erros ++ errs, avisos ++ avs)
-        _ -> (erros, avisos)
+    analisarComando vars (erros, avisos) = analisarComandoAtribuicao vars erros avisos
+
+-- | Função que analisa um comando de atribuição dentro de um bloco e acumula erros e avisos.
+-- Recebe uma lista de variáveis, uma lista de erros acumulados, uma lista de avisos acumulados, e um comando,
+-- e retorna uma lista de erros e avisos acumulados.
+analisarComandoAtribuicao :: [Var] -> [ErroSemantico] -> [AvisoSemantico] -> Comando -> ([ErroSemantico], [AvisoSemantico])
+analisarComandoAtribuicao vars erros avisos (Atrib id expr) =
+  let (errs, avs) = analisarAtribuicao vars id expr
+   in (erros ++ errs, avisos ++ avs)
+analisarComandoAtribuicao _ erros avisos _ = (erros, avisos)
+
 
 -- | Função que analisa um comando de atribuição.
 -- Recebe uma lista de variáveis, um identificador e uma expressão, e retorna uma lista de erros semânticos e avisos.
