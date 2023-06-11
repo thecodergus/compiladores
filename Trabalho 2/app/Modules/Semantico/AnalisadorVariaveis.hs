@@ -43,9 +43,15 @@ encontrarVariavel vars id = find (\(vid :#: _) -> vid == id) vars
 gerarErrosAvisosAtribuicao :: Id -> Type -> Type -> ([ErroSemantico], [AvisoSemantico])
 gerarErrosAvisosAtribuicao varId varType exprType =
   case (varType, exprType) of
-    (TDouble, TInt) -> ([IncompatibilidadeTipoAtribuicao varId TDouble TInt], [CoercaoTipo TInt TDouble, ConversaoAutomatica TInt TDouble])
-    (TInt, TDouble) -> ([IncompatibilidadeTipoAtribuicao varId TInt TDouble], [CoercaoTipo TDouble TInt, ConversaoAutomatica TDouble TInt])
+    (TDouble, TInt) -> ([], [ConversaoAutomatica TInt TDouble])
+    (TInt, TDouble) -> ([], [ConversaoAutomatica TDouble TInt])
+    (TDouble, TString) -> ([IncompatibilidadeTipoAtribuicao varId TDouble TString], [])
+    (TString, TDouble) -> ([IncompatibilidadeTipoAtribuicao varId TString TDouble], [])
+    (TInt, TString) -> ([IncompatibilidadeTipoAtribuicao varId TInt TString], [])
+    (TString, TInt) -> ([IncompatibilidadeTipoAtribuicao varId TString TInt], [])
     _ -> if varType == exprType then ([], []) else ([IncompatibilidadeTipoAtribuicao varId varType exprType], [])
+
+
 
 
 -- Função para inferir o tipo de uma expressão
