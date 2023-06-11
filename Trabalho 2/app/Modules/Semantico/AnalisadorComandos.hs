@@ -2,7 +2,7 @@
 module Semantico.AnalisadorComandos where
 import Sintatico.Types (Var ((:#:)), Bloco, Comando (Atrib), Id, Expr (Chamada), Type (TDouble, TInt))
 import Semantico.ErrosSemantico (ErroSemantico (IncompatibilidadeTipoAtribuicao, VariavelNaoDeclarada))
-import Semantico.AvisosSemantico (AvisoSemantico (CoercaoTipo, ConversaoDoubleParaInt))
+import Semantico.AvisosSemantico (AvisoSemantico (CoercaoTipo))
 import Data.Foldable (find)
 import Semantico.AnalisadorVariaveis (analisarAtribuicao, inferirTipo)
 
