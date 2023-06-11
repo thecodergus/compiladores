@@ -58,3 +58,8 @@ analisarRetornoFuncao vars (id :->: (_, tipoRetornoEsperado)) exprRetorno =
    in if tipoRetornoEsperado == tipoRetornoEncontrado
         then ([], [])
         else ([IncompatibilidadeTipoRetorno id tipoRetornoEsperado tipoRetornoEncontrado], [])
+
+
+-- Função para encontrar uma função pelo nome
+encontrarFuncao :: Id -> [Funcao] -> Maybe Funcao
+encontrarFuncao nome = find (\(id :->: _) -> id == nome)
