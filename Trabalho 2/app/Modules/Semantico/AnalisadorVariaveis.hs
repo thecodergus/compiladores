@@ -87,3 +87,9 @@ inferirTipoBinOp vars expr1 expr2 =
    in if t1 == t2
         then t1 -- Se os tipos forem iguais, retorna o tipo comum
         else TVoid -- Caso contrário, retorna TVoid como um placeholder para erro
+
+
+
+-- Função auxiliar para obter o nome de uma variável
+nomeVariavel :: Var -> String
+nomeVariavel (id :#: _) =  id
