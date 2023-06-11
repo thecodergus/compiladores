@@ -51,7 +51,7 @@ analisarDeclaracoesFuncoes funcoes =
           grupos = groupBy (\(fid1 :->: _) (fid2 :->: _) -> fid1 == fid2) sortedFuncoes
       in filter ((> 1) . length) grupos
 
-
+-- | Analisa uma lista de declarações de funções para identificar funções que não possuem retorno
 analisarRetornoFuncao :: [Var] -> Funcao -> Expr -> ([ErroSemantico], [AvisoSemantico])
 analisarRetornoFuncao vars (id :->: (_, tipoRetornoEsperado)) exprRetorno =
   let tipoRetornoEncontrado = inferirTipo vars exprRetorno
