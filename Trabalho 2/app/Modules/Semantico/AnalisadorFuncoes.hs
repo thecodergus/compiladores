@@ -5,6 +5,7 @@ import Semantico.AvisosSemantico (AvisoSemantico (..))
 import Data.Foldable (find)
 import Semantico.AnalisadorVariaveis (inferirTipo)
 import Data.List (sortOn, groupBy)
+import Data.Maybe (catMaybes)
 
 -- | Analisa uma chamada de função para verificar se ela foi declarada, 
 -- | se a quantidade de parâmetros é correta e se os tipos de parâmetros são compatíveis.
@@ -27,7 +28,12 @@ analisarParametros :: Id -> [Type] -> [Type] -> ([ErroSemantico], [AvisoSemantic
 analisarParametros id paramTipos argTipos
   | length paramTipos /= length argTipos = ([NumeroParametrosIncorreto id], [])
   | paramTipos == argTipos = ([], [])
-  | otherwise = ([TiposParametrosIncompativel id], [])
+  | otherwise = (encontrarIncompatibilidades id paramTipos argTipos, [])
+
+-- Função auxiliar que encontra incompatibilidades entre tipos de parâmetros
+encontrarIncompatibilidades :: Id -> [Type] -> [Type] -> [ErroSemantico]
+encontrarIncompatibilidades id paramTipos argTipos =
+  [TiposParametrosIncompativel id esperado encontrado | (esperado, encontrado) <- zip paramTipos argTipos, esperado /= encontrado]
 
 -- | Analisa uma lista de declarações de funções para identificar funções declaradas várias vezes
 analisarDeclaracoesFuncoes :: [Funcao] -> [ErroSemantico]
@@ -44,3 +50,11 @@ analisarDeclaracoesFuncoes funcoes =
       let sortedFuncoes = sortOn (\(fid :->: _) -> fid) funcoes
           grupos = groupBy (\(fid1 :->: _) (fid2 :->: _) -> fid1 == fid2) sortedFuncoes
       in filter ((> 1) . length) grupos
+
+
+analisarRetornoFuncao :: [Var] -> Funcao -> Expr -> ([ErroSemantico], [AvisoSemantico])
+analisarRetornoFuncao vars (id :->: (_, tipoRetornoEsperado)) exprRetorno =
+  let tipoRetornoEncontrado = inferirTipo vars exprRetorno
+   in if tipoRetornoEsperado == tipoRetornoEncontrado
+        then ([], [])
+        else ([IncompatibilidadeTipoRetorno id tipoRetornoEsperado tipoRetornoEncontrado], [])

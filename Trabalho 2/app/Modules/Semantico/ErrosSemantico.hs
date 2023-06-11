@@ -14,7 +14,8 @@ data ErroSemantico
   | DeclaracaoMultiplaVariavel {nomeVariavel :: Id}
   | DeclaracaoMultiplaFuncao {nomeFuncao :: Id}
   | NumeroParametrosIncorreto {nomeFuncao :: Id}
-  | TiposParametrosIncompativel {nomeFuncao :: Id}
+  | TiposParametrosIncompativel {nomeFuncao :: Id, tipoEsperado :: Type, tipoEncontrado :: Type}
   | ChamadaFuncaoNaoDeclarada {nomeFuncao :: Id}
   | FuncaoMultiplamenteDeclarada {nomeFuncao :: Id}
+  | IncompatibilidadeTipoRetorno {nomeFuncao :: Id, tipoEsperado :: Type, tipoEncontrado :: Type}
   deriving (Eq, Show)
