@@ -13,11 +13,15 @@ analisarPrograma (Prog funcoes funcoesBlocos vars bloco) =
   let -- Analisar o bloco principal
       (errosBloco, avisosBloco, blocoModificado) = analisarComandos vars bloco
 
-      -- Aqui você pode adicionar código para analisar as funções e seus blocos,
-      -- por exemplo, percorrendo cada função e seu bloco correspondente.
-      -- (errosFuncoes, avisosFuncoes, funcoesModificadas) = ...
+      -- Analisar cada função bloco
+      analiseFuncoesBlocos = map analisarFuncaoBloco funcoesBlocos
+      analisarFuncaoBloco (id, varsFuncao, blocoFuncao) =
+        let (erros, avisos, blocoModificado) = analisarComandos (vars ++ varsFuncao) blocoFuncao
+         in (erros, avisos, (id, varsFuncao, blocoModificado))
+
+      (errosFuncoes, avisosFuncoes, funcoesBlocosModificados) = unzip3 analiseFuncoesBlocos
 
       -- Combinar erros e avisos de blocos e funções
-      erros = errosBloco -- ++ errosFuncoes (se você analisou funções)
-      avisos = avisosBloco -- ++ avisosFuncoes (se você analisou funções)
-   in (erros, avisos, Prog funcoes funcoesBlocos vars blocoModificado)
+      erros = errosBloco ++ concat errosFuncoes
+      avisos = avisosBloco ++ concat avisosFuncoes
+   in (erros, avisos, Prog funcoes funcoesBlocosModificados vars blocoModificado)

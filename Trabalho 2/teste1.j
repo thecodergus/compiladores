@@ -1,4 +1,4 @@
-double maior (double a, double b)
+/*double maior (double a, double b)
 {
   int m;
   
@@ -28,7 +28,7 @@ void imprimir(string s, double r)
   print (s);
   print (r);
   return 0;
-}
+}*/
 
 void main(){
   int x, num;
