@@ -19,7 +19,8 @@ main = do
     input <- readFile filePath
     case parse programParser "" input of
         Left err -> print err
-        Right ast -> print $ analisarPrograma ast
+        Right ast -> let (_, _, programa) = analisarPrograma ast
+                            in print $ programa
 
 -- main :: IO ()
 -- main = do
