@@ -4,20 +4,27 @@ import Semantico.ErrosSemantico (ErroSemantico (IncompatibilidadeTipoAtribuicao,
 import Semantico.AvisosSemantico (AvisoSemantico (CoercaoTipo))
 import Data.Foldable (find)
 import Semantico.AnalisadorVariaveis (analisarAtribuicao, inferirTipo, analisarComandoAtribuicao)
+import Data.Maybe (catMaybes, mapMaybe)
+
 
 -- import 
 
 
 -- Função que analisa um bloco de comandos
-analisarComandos :: [Var] -> Bloco -> ([ErroSemantico], [AvisoSemantico])
-analisarComandos vars comandos = foldl combinar ([], []) resultadosRelevantes
+analisarComandos :: [Var] -> Bloco -> ([ErroSemantico], [AvisoSemantico], Bloco)
+analisarComandos vars comandos = (erros, avisos, comandosModificados)
   where
-    -- Aplica analisarComando a cada comando, mas mantém apenas os erros e avisos (ignora o Maybe Comando)
-    resultadosRelevantes = map ((\(erros, avisos, _) -> (erros, avisos)) . analisarComando vars) comandos
+    -- Aplica analisarComando a cada comando e extrai os erros, avisos e comandos modificados
+    resultadosPorComando = map (analisarComando vars) comandos
 
-    -- Função auxiliar para combinar os resultados
-    combinar :: ([ErroSemantico], [AvisoSemantico]) -> ([ErroSemantico], [AvisoSemantico]) -> ([ErroSemantico], [AvisoSemantico])
-    combinar (errosAcc, avisosAcc) (erros, avisos) = (errosAcc ++ erros, avisosAcc ++ avisos)
+    -- Extrai os erros e avisos de cada resultado
+    erros = concatMap (\(errs, _, _) -> errs) resultadosPorComando
+    avisos = concatMap (\(_, avs, _) -> avs) resultadosPorComando
+
+    -- Extrai os comandos modificados
+    comandosModificados = mapMaybe (\(_, _, maybeCmd) -> maybeCmd) resultadosPorComando
+
+-- Nota: catMaybes é uma função de Data.Maybe que remove os Nothings e extrai os valores de Justs.
 
 
 -- Função que analisa um comando individual
