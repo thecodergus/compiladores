@@ -1,0 +1,28 @@
+Em
+
+-- Recebe uma lista de variáveis, um identificador e uma expressão, e retorna uma lista de erros semânticos e avisos.
+analisarAtribuicao :: [Var] -> Id -> Expr -> ([ErroSemantico], [AvisoSemantico])
+analisarAtribuicao vars id expr =
+  case encontrarVariavel vars id of
+    Just (varId :#: varType) ->
+      let exprType = inferirTipo vars expr
+       in gerarErroAvisoAtribuicao varId varType exprType
+    Nothing -> ([VariavelNaoDeclarada id], [])
+
+Seria nom se retornace alem de ([ErroSemantico], [AvisoSemantico]) um Maybe Expr com a atribuição corrigida
+
+caso em
+
+gerarErroAvisoAtribuicao :: Id -> Type -> Type -> ([ErroSemantico], [AvisoSemantico])
+gerarErroAvisoAtribuicao varId varType exprType =
+  case (varType, exprType) of
+    (TDouble, TInt) -> ([], [ConversaoAutomatica TInt TDouble])
+    (TInt, TDouble) -> ([], [ConversaoAutomatica TDouble TInt])
+    (TDouble, TString) -> ([IncompatibilidadeTipoAtribuicao varId TDouble TString], [])
+    (TString, TDouble) -> ([IncompatibilidadeTipoAtribuicao varId TString TDouble], [])
+    (TInt, TString) -> ([IncompatibilidadeTipoAtribuicao varId TInt TString], [])
+    (TString, TInt) -> ([IncompatibilidadeTipoAtribuicao varId TString TInt], [])
+    _ -> if varType == exprType then ([], []) else ([IncompatibilidadeTipoAtribuicao varId varType exprType], [])
+
+
+caia nos casos (TDouble, TInt) -> ([], [ConversaoAutomatica TInt TDouble]) e (TInt, TDouble) -> ([], [ConversaoAutomatica TDouble TInt])

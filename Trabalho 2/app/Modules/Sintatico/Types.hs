@@ -31,6 +31,7 @@ data Expr
   | IdVar String
   | Chamada Id [Expr]
   | Lit String
+  | ConverterPara Type Expr
   deriving (Eq, Show)
 
 -- Representação das expressões relacionais na linguagem.

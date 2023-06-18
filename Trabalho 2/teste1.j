@@ -35,10 +35,7 @@ void main(){
   double a;
   int x;
   
-  print("Numero:");
-  read (num);
-  x = fat (4);
-  a = maior (2.5, 10);
-  imprimir("teste:", 2);
+  x = 2.5;
+
   return 0;
 }

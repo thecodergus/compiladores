@@ -1,7 +1,7 @@
 module Semantico.AnalisadorExpressoes where
 
-import Sintatico.Types (Var, Funcao, Expr (..), TCons(..), Type(..), Comando (Leitura), )
-import Semantico.ErrosSemantico (ErroSemantico (TiposIncompativeis))
+import Sintatico.Types (Var ((:#:)), Funcao, Expr (..), TCons(..), Type(..), Comando (Leitura), Id, )
+import Semantico.ErrosSemantico (ErroSemantico (TiposIncompativeis, VariavelNaoDeclarada))
 import Semantico.AnalisadorVariaveis (inferirTipo, analisarVariaveis)
 import Semantico.AnalisadorFuncoes (analisarChamadaFuncao)
 import Semantico.AvisosSemantico (AvisoSemantico(..))
@@ -11,7 +11,7 @@ import Semantico.AvisosSemantico (AvisoSemantico(..))
 analisarExpressao :: [Var] -> [Funcao] -> Expr -> ([ErroSemantico], [AvisoSemantico])
 analisarExpressao vars funcoes expr = case expr of
   Const c -> ([], [])
-  IdVar id -> analisarVariaveis vars [Leitura id]
+  IdVar id -> analisarUsoVariavel vars id
   Chamada id exprs -> analisarChamadaFuncao funcoes vars (Chamada id exprs)
   e1 :+: e2 -> analisarOperacaoBinaria vars funcoes (:+:) e1 e2
   e1 :-: e2 -> analisarOperacaoBinaria vars funcoes (:-:) e1 e2
@@ -19,6 +19,24 @@ analisarExpressao vars funcoes expr = case expr of
   e1 :/: e2 -> analisarOperacaoBinaria vars funcoes (:/:) e1 e2
   Neg e -> analisarExpressao vars funcoes e
   Lit _ -> ([], [])
+
+
+-- | Função para analisar o uso de uma variável.
+-- Esta função recebe uma lista de variáveis 'vars' que estão no escopo atual,
+-- e um identificador 'id' que representa a variável cujo uso queremos analisar.
+-- A função retorna uma lista de erros semânticos e uma lista de avisos semânticos.
+-- Se a variável com o identificador 'id' não estiver na lista 'vars',
+-- um erro será retornado indicando que a variável não foi declarada.
+analisarUsoVariavel :: [Var] -> Id -> ([ErroSemantico], [AvisoSemantico])
+analisarUsoVariavel vars id =
+  let varsWithId = filter (\(varId :#: _) -> varId == id) vars
+   in if null varsWithId -- Verifica se a lista filtrada está vazia (ou seja, variável não encontrada)
+        then ([VariavelNaoDeclarada id], []) -- Erro: variável não declarada
+        else ([], []) -- Nenhum erro ou aviso
+
+
+
+  
 
 -- Função auxiliar para analisar operações binárias
 analisarOperacaoBinaria :: [Var] -> [Funcao] -> (Expr -> Expr -> Expr) -> Expr -> Expr -> ([ErroSemantico], [AvisoSemantico])

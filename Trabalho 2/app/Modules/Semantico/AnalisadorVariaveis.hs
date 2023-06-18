@@ -8,31 +8,39 @@ import Data.Foldable (find)
 
 -- | Função que analisa o bloco de comandos em busca de erros relacionados às variáveis.
 -- Recebe uma lista de variáveis e um bloco de comandos, e retorna uma lista de erros semânticos e avisos.
-analisarVariaveis :: [Var] -> Bloco -> ([ErroSemantico], [AvisoSemantico])
-analisarVariaveis vars = foldl (analisarComando vars) ([], [])
+analisarVariaveis :: [Var] -> Bloco -> ([ErroSemantico], [AvisoSemantico], Bloco)
+analisarVariaveis vars = foldl analisarComando ([], [], [])
   where
-    analisarComando vars (erros, avisos) = analisarComandoAtribuicao vars erros avisos
+    analisarComando (erros, avisos, comandos) comando =
+      let (errs, avs, mNewCmd) = analisarComandoAtribuicao vars erros avisos comando
+       in (erros ++ errs, avisos ++ avs, comandos ++ maybeToList mNewCmd)
+
+-- Função auxiliar para converter um Maybe para uma lista
+maybeToList :: Maybe a -> [a]
+maybeToList Nothing = []
+maybeToList (Just x) = [x]
+
 
 -- | Função que analisa um comando de atribuição dentro de um bloco e acumula erros e avisos.
 -- Recebe uma lista de variáveis, uma lista de erros acumulados, uma lista de avisos acumulados, e um comando,
 -- e retorna uma lista de erros e avisos acumulados.
-analisarComandoAtribuicao :: [Var] -> [ErroSemantico] -> [AvisoSemantico] -> Comando -> ([ErroSemantico], [AvisoSemantico])
+analisarComandoAtribuicao :: [Var] -> [ErroSemantico] -> [AvisoSemantico] -> Comando -> ([ErroSemantico], [AvisoSemantico], Maybe Comando)
 analisarComandoAtribuicao vars erros avisos (Atrib id expr) =
-  let (errs, avs) = analisarAtribuicao vars id expr
-   in (erros ++ errs, avisos ++ avs)
-analisarComandoAtribuicao _ erros avisos _ = (erros, avisos)
+  let (errs, avs, mNewCmd) = analisarAtribuicao vars id expr
+   in (erros ++ errs, avisos ++ avs, mNewCmd)
+analisarComandoAtribuicao _ erros avisos cmd = (erros, avisos, Just cmd)
 
 
 -- | Função que analisa um comando de atribuição.
 -- Recebe uma lista de variáveis, um identificador e uma expressão, e retorna uma lista de erros semânticos e avisos.
-analisarAtribuicao :: [Var] -> Id -> Expr -> ([ErroSemantico], [AvisoSemantico])
+analisarAtribuicao :: [Var] -> Id -> Expr -> ([ErroSemantico], [AvisoSemantico], Maybe Comando)
 analisarAtribuicao vars id expr =
   case encontrarVariavel vars id of
     Just (varId :#: varType) ->
       let exprType = inferirTipo vars expr
-       in gerarErrosAvisosAtribuicao varId varType exprType
-    Nothing -> ([VariavelNaoDeclarada id], [])
-
+          (errs, avs, mNewExpr) = gerarErroAvisoAtribuicao varId varType exprType expr
+       in (errs, avs, fmap (Atrib id) mNewExpr)
+    Nothing -> ([VariavelNaoDeclarada id], [], Nothing)
 -- | Função para analisar se uma variável foi declarada.
 -- Recebe uma lista de variáveis e um identificador, retorna a variável se encontrada ou Nothing caso contrário.
 encontrarVariavel :: [Var] -> Id -> Maybe Var
@@ -40,17 +48,16 @@ encontrarVariavel vars id = find (\(vid :#: _) -> vid == id) vars
 
 -- | Função para gerar erros ou avisos com base nos tipos envolvidos na atribuição.
 -- Recebe o identificador da variável, o tipo da variável, e o tipo da expressão a ser atribuída.
-gerarErrosAvisosAtribuicao :: Id -> Type -> Type -> ([ErroSemantico], [AvisoSemantico])
-gerarErrosAvisosAtribuicao varId varType exprType =
+gerarErroAvisoAtribuicao :: Id -> Type -> Type -> Expr -> ([ErroSemantico], [AvisoSemantico], Maybe Expr)
+gerarErroAvisoAtribuicao varId varType exprType expr =
   case (varType, exprType) of
-    (TDouble, TInt) -> ([], [ConversaoAutomatica TInt TDouble])
-    (TInt, TDouble) -> ([], [ConversaoAutomatica TDouble TInt])
-    (TDouble, TString) -> ([IncompatibilidadeTipoAtribuicao varId TDouble TString], [])
-    (TString, TDouble) -> ([IncompatibilidadeTipoAtribuicao varId TString TDouble], [])
-    (TInt, TString) -> ([IncompatibilidadeTipoAtribuicao varId TInt TString], [])
-    (TString, TInt) -> ([IncompatibilidadeTipoAtribuicao varId TString TInt], [])
-    _ -> if varType == exprType then ([], []) else ([IncompatibilidadeTipoAtribuicao varId varType exprType], [])
-
+    (TDouble, TInt) -> ([], [ConversaoAutomatica TInt TDouble], Just (ConverterPara TDouble expr))
+    (TInt, TDouble) -> ([], [ConversaoAutomatica TDouble TInt], Just (ConverterPara TInt expr))
+    (TDouble, TString) -> ([IncompatibilidadeTipoAtribuicao varId TDouble TString], [], Nothing)
+    (TString, TDouble) -> ([IncompatibilidadeTipoAtribuicao varId TString TDouble], [], Nothing)
+    (TInt, TString) -> ([IncompatibilidadeTipoAtribuicao varId TInt TString], [], Nothing)
+    (TString, TInt) -> ([IncompatibilidadeTipoAtribuicao varId TString TInt], [], Nothing)
+    _ -> if varType == exprType then ([], [], Nothing) else ([IncompatibilidadeTipoAtribuicao varId varType exprType], [], Nothing)
 
 
 

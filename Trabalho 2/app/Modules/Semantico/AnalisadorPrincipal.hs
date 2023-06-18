@@ -9,6 +9,5 @@ import Semantico.AnalisadorComandos (analisarComandos)
 
 -- | Função principal que analisa um programa
 analisarPrograma :: Programa -> ([ErroSemantico], [AvisoSemantico])
-analisarPrograma (Prog funcoes funcoesBlocos vars bloco) =
-    -- Analisar bloco principal
+analisarPrograma (Prog funcoes funcoesBlocos vars bloco) = do
     analisarComandos vars bloco
