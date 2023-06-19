@@ -17,12 +17,16 @@ analisarPrograma (Prog funcoes funcoesBlocos vars bloco) =
 
       -- Analisar o bloco principal
       (errosBloco, avisosBloco, blocoModificado) = analisarComandos funcoes vars bloco
+      (errosVariaveis, avisosVariaveis, _) = analisarVariaveis vars bloco
 
       -- Analisar cada função bloco
       analiseFuncoesBlocos = map analisarFuncaoBloco funcoesBlocos
       (errosFuncoes, avisosFuncoes, funcoesBlocosModificados) = unzip3 analiseFuncoesBlocos
 
+      -- Aanalisando as definicoes de funcoes
+      errosDeclaracoesFuncoes = analisarDeclaracoesFuncoes funcoes
+
       -- Combinar erros e avisos de blocos e funções
-      erros = errosBloco ++ concat errosFuncoes
-      avisos = avisosBloco ++ concat avisosFuncoes
+      erros = errosBloco ++ concat errosFuncoes ++ errosVariaveis ++ errosDeclaracoesFuncoes
+      avisos = avisosBloco ++ concat avisosFuncoes 
    in (erros, avisos, Prog funcoes funcoesBlocosModificados vars blocoModificado)
