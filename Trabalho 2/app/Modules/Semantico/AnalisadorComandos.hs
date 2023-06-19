@@ -1,6 +1,6 @@
 module Semantico.AnalisadorComandos where
 import Sintatico.Types (Var ((:#:)), Bloco, Comando (Atrib, Leitura, Imp, Ret, Proc, If, While), Id, Expr (Chamada), Type (TDouble, TInt), Funcao ((:->:)), ExprL)
-import Semantico.ErrosSemantico (ErroSemantico (IncompatibilidadeTipoAtribuicao, VariavelNaoDeclarada))
+import Semantico.ErrosSemantico (ErroSemantico (IncompatibilidadeTipoAtribuicao, VariavelNaoDeclarada, ChamadaFuncaoNaoDeclarada, NumeroParametrosIncorreto))
 import Semantico.AvisosSemantico (AvisoSemantico (CoercaoTipo))
 import Data.Foldable (find)
 import Semantico.AnalisadorVariaveis (analisarAtribuicao, inferirTipo, analisarComandoAtribuicao)
@@ -11,11 +11,11 @@ import Data.Maybe (catMaybes, mapMaybe)
 
 
 -- Função que analisa um bloco de comandos
-analisarComandos :: [Var] -> Bloco -> ([ErroSemantico], [AvisoSemantico], Bloco)
-analisarComandos vars comandos = (erros, avisos, comandosModificados)
+analisarComandos :: [Funcao] -> [Var] -> Bloco -> ([ErroSemantico], [AvisoSemantico], Bloco)
+analisarComandos funcoes vars comandos = (erros, avisos, comandosModificados)
   where
     -- Aplica analisarComando a cada comando e extrai os erros, avisos e comandos modificados
-    resultadosPorComando = map (analisarComando vars) comandos
+    resultadosPorComando = map (analisarComando vars funcoes) comandos
 
     -- Extrai os erros e avisos de cada resultado
     erros = concatMap (\(errs, _, _) -> errs) resultadosPorComando
@@ -24,37 +24,41 @@ analisarComandos vars comandos = (erros, avisos, comandosModificados)
     -- Extrai os comandos modificados
     comandosModificados = mapMaybe (\(_, _, maybeCmd) -> maybeCmd) resultadosPorComando
 
--- Nota: catMaybes é uma função de Data.Maybe que remove os Nothings e extrai os valores de Justs.
 
 
 -- Função que analisa um comando individual
 -- Ajustando a função analisarComando para chamar analisarComandoAtribuicao e retornar o comando modificado
-analisarComando :: [Var] -> Comando -> ([ErroSemantico], [AvisoSemantico], Maybe Comando)
-analisarComando vars comando =
+-- Função que analisa um comando individual
+analisarComando :: [Var] -> [Funcao] -> Comando -> ([ErroSemantico], [AvisoSemantico], Maybe Comando)
+analisarComando vars funcoes comando =
   case comando of
     Atrib id expr -> analisarComandoAtribuicao vars [] [] comando
     Leitura id ->
-      -- Aqui você pode chamar sua função analisarLeitura
-      ([], [], Just comando)
+      let (erros, avisos) = analisarLeitura vars id
+       in (erros, avisos, Just comando)
     Imp expr ->
-      -- Aqui você pode chamar sua função analisarImpressao
-      ([], [], Just comando)
+      let (erros, avisos) = analisarImpressao vars expr
+       in (erros, avisos, Just comando)
     Ret maybeExpr ->
-      -- Aqui você pode chamar sua função analisarRetorno
-      ([], [], Just comando)
+      let (erros, avisos) = analisarRetorno vars maybeExpr
+       in (erros, avisos, Just comando)
     Proc id exprs ->
-      -- Aqui você pode chamar sua função analisarChamadaProcedimento
-      ([], [], Just comando)
+      let (erros, avisos) = analisarChamadaProcedimento vars funcoes id exprs
+       in (erros, avisos, Just comando)
     If exprL bloco1 bloco2 ->
-      -- Aqui você pode chamar sua função analisarIf
-      ([], [], Just comando)
+      let (erros, avisos) = analisarIf vars exprL bloco1 bloco2
+       in (erros, avisos, Just comando)
     While exprL bloco ->
-      -- Aqui você pode chamar sua função analisarWhile
-      ([], [], Just comando)
+      let (erros, avisos) = analisarWhile vars exprL bloco
+       in (erros, avisos, Just comando)
 
 -- Analisa a leitura de uma variável
 analisarLeitura :: [Var] -> Id -> ([ErroSemantico], [AvisoSemantico])
-analisarLeitura vars id = ([], [])
+analisarLeitura vars id =
+  if variavelDeclarada id vars
+    then ([], [])
+    else ([VariavelNaoDeclarada id], [])
+
 
 -- Analisa uma impressão
 analisarImpressao :: [Var] -> Expr -> ([ErroSemantico], [AvisoSemantico])
@@ -71,7 +75,13 @@ analisarRetorno vars maybeExpr =
 -- Analisa uma chamada de procedimento
 analisarChamadaProcedimento :: [Var] -> [Funcao] -> Id -> [Expr] -> ([ErroSemantico], [AvisoSemantico])
 analisarChamadaProcedimento vars funcoes id exprs =
-  ([], [])
+  case funcaoDeclarada id funcoes of
+    Just (params, returnType) ->
+      if length params == length exprs
+        then ([], []) -- Aqui você deve adicionar mais análises para os tipos dos parâmetros
+        else ([NumeroParametrosIncorreto id], [])
+    Nothing -> ([ChamadaFuncaoNaoDeclarada id], [])
+
 -- Analisa um if
 analisarIf :: [Var] -> ExprL -> Bloco -> Bloco -> ([ErroSemantico], [AvisoSemantico])
 analisarIf vars exprL bloco1 bloco2 =
@@ -81,3 +91,15 @@ analisarIf vars exprL bloco1 bloco2 =
 analisarWhile :: [Var] -> ExprL -> Bloco -> ([ErroSemantico], [AvisoSemantico])
 analisarWhile vars exprL bloco =
   ([], [])
+
+
+variavelDeclarada :: Id -> [Var] -> Bool
+variavelDeclarada id = any (\(varId :#: _) -> varId == id)
+
+funcaoDeclarada :: Id -> [Funcao] -> Maybe ([Var], Type)
+funcaoDeclarada id funcoes =
+  case find (\(funId :->: _) -> funId == id) funcoes of
+    Just (_ :->: (params, returnType)) -> Just (params, returnType)
+    Nothing -> Nothing
+
+

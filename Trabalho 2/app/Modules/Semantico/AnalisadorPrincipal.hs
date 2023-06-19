@@ -10,15 +10,16 @@ import Semantico.AnalisadorComandos (analisarComandos)
 -- | Função principal que analisa um programa
 analisarPrograma :: Programa -> ([ErroSemantico], [AvisoSemantico], Programa)
 analisarPrograma (Prog funcoes funcoesBlocos vars bloco) =
-  let -- Analisar o bloco principal
-      (errosBloco, avisosBloco, blocoModificado) = analisarComandos vars bloco
+  let -- Função auxiliar para analisar um único bloco de função
+      analisarFuncaoBloco (id, varsFuncao, blocoFuncao) =
+        let (erros, avisos, blocoModificado) = analisarComandos funcoes (vars ++ varsFuncao) blocoFuncao
+         in (erros, avisos, (id, varsFuncao, blocoModificado))
+
+      -- Analisar o bloco principal
+      (errosBloco, avisosBloco, blocoModificado) = analisarComandos funcoes vars bloco
 
       -- Analisar cada função bloco
       analiseFuncoesBlocos = map analisarFuncaoBloco funcoesBlocos
-      analisarFuncaoBloco (id, varsFuncao, blocoFuncao) =
-        let (erros, avisos, blocoModificado) = analisarComandos (vars ++ varsFuncao) blocoFuncao
-         in (erros, avisos, (id, varsFuncao, blocoModificado))
-
       (errosFuncoes, avisosFuncoes, funcoesBlocosModificados) = unzip3 analiseFuncoesBlocos
 
       -- Combinar erros e avisos de blocos e funções
