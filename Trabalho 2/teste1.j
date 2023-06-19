@@ -30,12 +30,12 @@ void imprimir(string s, double r)
   return 0;
 }*/
 
-void main(){
+int main(){
   int x, num;
   double a;
   int x;
-  
-  x = 2.5;
+
+  //x = 2.5;
 
   return 0;
 }
